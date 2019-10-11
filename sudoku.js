@@ -1,16 +1,23 @@
+
 $(document).ready(function(){
 
   //Løkke som genererer brettet
-  var tabell = "<table>";
-  for (var i = 0; i < 9; i++) {
+  let tabell = "<table>";
+  for (let i = 0; i < 9; i++) {
     tabell += "<tr>";
-    for (var j = 0; j < 9; j++) {
-      tabell += "<td>";
-      tabell += "<input type='text'>";
-      tabell += "</td>";
+    for (let j = 0; j < 9; j++) {
+      tabell += "<td><input type='text' oninput='checkInput(this)'></td>";
     }
     tabell += "</tr>";
   }
   tabell += "</table>";
   $("#brett").html(tabell);
 });
+
+
+function checkInput(cell) {
+  let input = Number(cell.value);
+  if ((isNaN(input)) || input < 0 || input > 10 || cell.value.length > 1) {
+    cell.value = "";
+  }
+}

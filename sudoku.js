@@ -17,7 +17,7 @@ $(document).ready(function(){
 
 function checkInput(cell) {
   let input = Number(cell.value);
-  if ((isNaN(input)) || input < 0 || input > 10 || cell.value.length > 1) {
-    cell.value = "";
+  if (input < 0 || input > 10 || cell.value.length > 1 || isNaN(input)) {
+    cell.value = (cell.value).slice(0, -1);
   }
 }

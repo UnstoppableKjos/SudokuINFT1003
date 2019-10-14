@@ -1,1 +1,1 @@
-# SudokuINFT1003
+# Sudoku - INFT1003

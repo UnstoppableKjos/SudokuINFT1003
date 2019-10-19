@@ -5,8 +5,14 @@ table {
 td {
   border: 1px solid black;
   padding: 0;
-	height: 35px;
-	width: 35px;
+}
+
+td:first-child {
+	border-left: 3px solid black;
+}
+
+td:nth-child(3n) {
+  border-right: 3px solid black;
 }
 
 tr:first-child td {
@@ -15,14 +21,6 @@ tr:first-child td {
 
 tr:nth-child(3n) td {
 	border-bottom: 3px solid black;
-}
-
-td:first-child {
-	border-left: 3px solid black;
-}
-
-td:nth-child(3n) {
- border-right: 3px solid black;
 }
 
 input {

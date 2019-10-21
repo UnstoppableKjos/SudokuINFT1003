@@ -14,7 +14,7 @@ $(document).ready(function(){
 
   // Flytter musepeker før tallet når man klikker på en celle, eller skriver inn et tall
   // Gjør at tallet kan endres uten å klikke på cellen på nytt
-  $(".celle").on("click keyup", function() {
+  $(".celle").on("click input", function() {
     $(this)[0].setSelectionRange(0, 0);
   });
 
@@ -93,7 +93,10 @@ $(document).ready(function(){
   Fjerner alt annet */
 function checkInput(cell) {
   let input = Number(cell.value);
-  if (input < 0 || input > 10 || cell.value.length > 1 || isNaN(input)) {
+  if (isNaN(input)) {
+    cell.value = (cell.value).slice(1, 2);
+  }
+  else if (input < 0 || input > 10 || cell.value.length > 1) {
     cell.value = (cell.value).slice(0, -1); // Kutter av alle karakterer etter den første
   }
 }

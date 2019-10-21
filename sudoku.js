@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
   // Genererer brettet
-  let brett = "<table>";
+  let brett = "<table id='brett'>";
   for (let i = 0; i < 9; i++) {
     brett += "<tr>";
     for (let j = 0; j < 9; j++) {

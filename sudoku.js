@@ -1,16 +1,22 @@
 $(document).ready(function(){
 
-  // Løkke som genererer brettet
-  let tabell = "<table>";
+  // Genererer brettet
+  let brett = "<table id='brett'>";
   for (let i = 0; i < 9; i++) {
     brett += "<tr>";
     for (let j = 0; j < 9; j++) {
-      brett += "<td><input type='text' oninput='checkInput(this)'></td>";
+      brett += "<td><input class='celle' type='text' oninput='checkInput(this)'></td>";
     }
     brett += "</tr>";
   }
   brett += "</table>";
   $("#brett").html(brett);
+
+  // Flytter musepeker før tallet når man klikker på en celle, eller skriver inn et tall
+  // Gjør at tallet kan endres uten å klikke på cellen på nytt
+  $(".celle").on("click keyup", function() {
+    $(this)[0].setSelectionRange(0, 0);
+  });
 
   // Oppretter en tom tabell for alle tallene på brettet
   var tabell = [[],[],[],[],[],[],[],[],[]]

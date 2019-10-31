@@ -23,7 +23,7 @@ tr:nth-child(3n) td {
 	border-bottom: 3px solid black;
 }
 
-input {
+input[type="text"] {
   text-align: center;
 	padding: 0;
 	border: 0;
@@ -31,6 +31,10 @@ input {
   height: 50px;
 	width: 50px;
   font-size: 25px;
+}
+
+input:disabled {
+  background-color: white;
 }
 
 tr:nth-child(-n+3) td:nth-child(-n+3) input,
@@ -42,7 +46,7 @@ tr:nth-child(n+7) td:nth-child(n+7) input {
   background-color: rgb(240,240,240);
 }
 
-#brett input:hover {
+#brett input:hover:enabled {
   background-color: rgb(0,80,158);
   cursor: pointer;
 }
@@ -50,6 +54,7 @@ tr:nth-child(n+7) td:nth-child(n+7) input {
 #brett input:focus {
   outline: none;
   background-color: rgb(0,80,158);
+  /* Gjør at musepekeren ikke vises i valgt celle */
   color: transparent;
   text-shadow: 0 0 white;
 }

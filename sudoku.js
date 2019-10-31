@@ -18,85 +18,128 @@ $(document).ready(function(){
     $(this)[0].setSelectionRange(0, 0);
   });
 
-  // Oppretter en tom tabell for alle tallene på brettet
-  var tabell = [[],[],[],[],[],[],[],[],[]]
+  // Setter startpunkt for ytelsesmåling
+  var t0 = performance.now();
 
-  // Funksjon som finner første ledige celle i tabellen
-  function finnCelle() {
-    var posisjon = [-1,-1];
-    for (let i = 0; i < 9; i++) { // Går gjennom hver rad
-      for (let j = 0; j < 9; j++) { // Går gjennom hver kolonne
-        if (typeof tabell[i][j] === "undefined") { // Sjekker om cellen er tom
-          posisjon[0] = i; // Legger til radnummer
-          posisjon[1] = j; // Legger til kolonnenummer
-          return posisjon; // Returnerer [i, j] ved tom celle
-        }
-      }
-    }
-    return posisjon // Returnerer [-1, -1] ved ingen tomme celler
-  }
+  // Lager et fullstendig utfylt brett
+  genererSudoku();
+  // Fjerner tall for å gjøre brettet spillbart
+  fjernTall();
+  // Skriver ut brettet
+  skrivUt();
 
-  // Sjekker om tall finnes i samme rad, kolonne eller 3x3-boks
-  function valider(tabell, rad, kolonne, tallet) {
-      for (let i = 0; i < 9; i++) { // Kjører valideringen for hver mulig posisjon
-          let j = 3 * Math.floor(rad / 3) + Math.floor(i / 3); // Finner rad i 3x3-boks
-          let k = 3 * Math.floor(kolonne / 3) + i % 3; // Finner kolonne i 3x3-boks
-          if (tabell[rad][i] == tallet || tabell[i][kolonne] == tallet || tabell[j][k] == tallet) {
-            return false; // Validering feiler hvis tallet er funnet
-          }
-      }
-      return true; // Validering godkjennes hvis tallet ikke finnes fra før
-  }
-
-  // Kjører sudoku-funksjonen for å fylle ut brettet
-  sudoku();
-
-  function sudoku() {
-    // Henter nummer for rad og kolonne på cellen som skal fylles ut
-    var celle = finnCelle();
-    var rad = celle[0];
-    var kolonne = celle[1];
-
-    // Sjekker om det er flere tomme celler, avslutter funksjonen hvis alt er utfylt
-    if (rad == -1) {
-      return true;
-    }
-
-    var tall = [1,2,3,4,5,6,7,8,9]; // Oppretter en matrise med mulige tall som kan fylles inn
-
-    while (tall.length) { // Så lenge det finnes mulige tall å velge
-      var indeks = Math.floor(Math.random() * tall.length); // Velger et tilfeldig tall
-      tallet = tall[indeks]; // Henter ut tallet
-      tall.splice(indeks, 1) // Fjerner tallet fra mulige valg
-      if (valider(tabell, rad, kolonne, tallet)) { // Sjekker om valgt tall er gyldig i cellen
-          tabell[rad][kolonne] = tallet; // Legger til tallet
-          // Kjører funksjonen på nytt, slik at neste tall kan fylles ut
-          if (sudoku()) {
-              return true; // Avslutter funksjonen hvis alt er utfylt
-          }
-          tabell[rad][kolonne] = undefined; // Setter den sist utfylte cellen som tom hvis ingen flere tall er gyldige
-      }
-    }
-  }
-
-  // Skriver ut tall fra tabell til brettet
-  for (let i = 0; i < 9; i++) {
-    for (let j = 0; j < 9; j++) {
-      $("tr:eq("+i+") td:eq("+j+") input").val(tabell[i][j]);
-      }
-  }
+  // Måler hvor lang tid det tar å generere brettet
+  var t1 = performance.now();
+  console.log("Brett laget på " + (t1 - t0) + " ms.");
 
 });
 
+// Oppretter en tom tabell for alle tallene på brettet
+var tabell = [[],[],[],[],[],[],[],[],[]]
+
+// Funksjon som finner første ledige celle i tabellen
+function finnCelle() {
+  var posisjon = [-1,-1];
+  for (let i = 0; i < 9; i++) { // Går gjennom hver rad
+    for (let j = 0; j < 9; j++) { // Går gjennom hver kolonne
+      if (typeof tabell[i][j] === "undefined") { // Sjekker om cellen er tom
+        posisjon[0] = i; // Legger til radnummer
+        posisjon[1] = j; // Legger til kolonnenummer
+        return posisjon; // Returnerer [i, j] ved tom celle
+      }
+    }
+  }
+  return posisjon // Returnerer [-1, -1] ved ingen tomme celler
+}
+
+// Sjekker om tall finnes i samme rad, kolonne eller 3x3-boks
+function valider(rad, kolonne, tallet) {
+    for (let i = 0; i < 9; i++) { // Kjører valideringen for hver mulig posisjon
+        let j = 3 * Math.floor(rad / 3) + Math.floor(i / 3); // Finner rad i 3x3-boks
+        let k = 3 * Math.floor(kolonne / 3) + i % 3; // Finner kolonne i 3x3-boks
+        if (tabell[rad][i] == tallet || tabell[i][kolonne] == tallet || tabell[j][k] == tallet) {
+          return false; // Validering feiler hvis tallet er funnet
+        }
+    }
+    return true; // Validering godkjennes hvis tallet ikke finnes fra før
+}
+
+// Funksjon for å fylle ut et fullstendig Sudoku-brett
+function genererSudoku() {
+  // Henter nummer for rad og kolonne på cellen som skal fylles ut
+  var celle = finnCelle();
+  var rad = celle[0];
+  var kolonne = celle[1];
+
+  // Sjekker om det er flere tomme celler, avslutter funksjonen hvis alt er utfylt
+  if (rad == -1) {
+    return true;
+  }
+
+  var tall = [1,2,3,4,5,6,7,8,9]; // Oppretter en matrise med mulige tall som kan fylles inn
+
+  while (tall.length) { // Så lenge det finnes mulige tall å velge
+    let indeks = Math.floor(Math.random() * tall.length); // Velger et tilfeldig tall
+    tallet = tall[indeks]; // Henter ut tallet
+    tall.splice(indeks, 1) // Fjerner tallet fra mulige valg
+    if (valider(rad, kolonne, tallet)) { // Sjekker om valgt tall er gyldig i cellen
+        tabell[rad][kolonne] = tallet; // Legger til tallet
+        // Kjører funksjonen på nytt, slik at neste tall kan fylles ut
+        if (genererSudoku()) {
+            return true; // Avslutter funksjonen hvis alt er utfylt
+        }
+        tabell[rad][kolonne] = undefined; // Setter den sist utfylte cellen som tom hvis ingen flere tall er gyldige
+    }
+  }
+  return false;
+}
+
+// Funksjon for å fjerne tilfeldige tall, for å lage et spillbart brett
+
+/* ***************************************************************************
+***** OBS! Kun laget for å få testet andre funksjoner!                   *****
+***** Fjerner helt tilfeldige tall, så brettet har ikke en unik løsning. *****
+*************************************************************************** */
+
+function fjernTall() {
+  var antallTall = 81;
+  var antallHint = 30;
+  while (antallTall > antallHint) {
+    // Genererer to tilfeldige tall mellom 0 og 8 for å velge indeksen til en tilfeldig celle
+    let x = Math.floor(Math.random() * 9);
+    let y = Math.floor(Math.random() * 9);
+    // Fjerner tallet hvis det ikke har blitt fjernet fra før
+    if (typeof tabell[x][y] !== "undefined") {
+      tabell[x][y] = undefined;
+      antallTall--;
+    }
+  }
+}
+
+// Skriver ut tall fra tabell til brettet
+function skrivUt() {
+  for (let i = 0; i < 9; i++) {
+    for (let j = 0; j < 9; j++) {
+      $("tr:eq("+i+") td:eq("+j+") input").val(tabell[i][j]);
+      if (typeof tabell[i][j] !== "undefined") {
+        $("tr:eq("+i+") td:eq("+j+") input").prop("disabled", true);
+      }
+    }
+  }
+}
 
 /* Tar inn et <input> element og sjekker om det kun står ett siffer mellom 1 og 9 der.
   Fjerner alt annet */
 function checkInput(cell) {
   let input = Number(cell.value);
-  if (isNaN(input)) {
-    cell.value = (cell.value).slice(1, 2);
-  }
-  else if (input < 0 || input > 10 || cell.value.length > 1) {
+  if (isNaN(input) ||
+      (cell.value).slice(0, 1) == 0 ||
+      (cell.value).slice(0, 1) == "+" ||
+      (cell.value).slice(0, 1) == "-") {
+        cell.value = (cell.value).slice(1, 2);
+  } else if (input < 0 ||
+             input > 10 ||
+             cell.value.length > 1) {
     cell.value = (cell.value).slice(0, -1); // Kutter av alle karakterer etter den første
   }
 }

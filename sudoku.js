@@ -64,16 +64,22 @@ function valider(rad, kolonne, tallet) {
     return true; // Validering godkjennes hvis tallet ikke finnes fra før
 }
 
+var rekursjon = 0; // Teller for å se hvor mange funksjonskall som trengs for å generere brettet
+var test = true;
+
 // Funksjon for å fylle ut et fullstendig Sudoku-brett
 function genererSudoku() {
   // Henter nummer for rad og kolonne på cellen som skal fylles ut
   var celle = finnCelle();
-  var rad = celle[0];
+  var rad = celle[0]; //
   var kolonne = celle[1];
 
   // Sjekker om det er flere tomme celler, avslutter funksjonen hvis alt er utfylt
   if (rad == -1) {
+    console.log("Antall rekursjoner: " + rekursjon);
     return true;
+  } else {
+    rekursjon++; // Øker telleren for hver gang funksjonen må kjøres på nytt
   }
 
   var tall = [1,2,3,4,5,6,7,8,9]; // Oppretter en matrise med mulige tall som kan fylles inn
@@ -82,15 +88,19 @@ function genererSudoku() {
     let indeks = Math.floor(Math.random() * tall.length); // Velger et tilfeldig tall
     tallet = tall[indeks]; // Henter ut tallet
     tall.splice(indeks, 1) // Fjerner tallet fra mulige valg
+    console.log("Forsøker " + tallet + " i celle " + (rad + 1) + "," + (kolonne + 1));
     if (valider(rad, kolonne, tallet)) { // Sjekker om valgt tall er gyldig i cellen
         tabell[rad][kolonne] = tallet; // Legger til tallet
-        // Kjører funksjonen på nytt, slik at neste tall kan fylles ut
-        if (genererSudoku()) {
-            return true; // Avslutter funksjonen hvis alt er utfylt
+        console.log(tallet + " er gyldig, legger til")
+        if (genererSudoku()) { // Avslutter og går til neste celle dersom det har blitt fylt inn et tall
+            return true;
         }
         tabell[rad][kolonne] = undefined; // Setter den sist utfylte cellen som tom hvis ingen flere tall er gyldige
+    } else {
+      console.log("Ikke gyldig, velger et nytt tall");
     }
   }
+  console.log("Ingen gyldige tall, går tilbake til forrige celle")
   return false;
 }
 

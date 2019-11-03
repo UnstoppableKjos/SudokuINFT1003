@@ -10,7 +10,20 @@
   </head>
 
   <body>
+    <div id="regler">
+      <p>Sudoku er et tallspill der målet er å fylle inn rutenettet med tallene 1-9 slik at hver rad og kolonne bare inneholder ett av hvert tall.
+        Rutenettet er også delt inn i 9 mindre rutenett der hvert av dem og bare kan inneholde ett av hvert tall.</p>
+    </div><br>
+    <div id="vanskelighetsvalg">
+      <button class="vanskelighetsgrad">Lett</button>
+      <button class="vanskelighetsgrad">Medium</button>
+      <button class="vanskelighetsgrad">Vanskelig</button>
+    </div><br>
+
     <div id="brett"></div>
+    <div id="poengsum">
+      <p>Poengsum:</p>
+    </div>
     <div id="ui">
       <input type="button" value="Løs brett" onclick="genererSudoku();skrivUt();">
     </div>

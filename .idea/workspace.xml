@@ -2,12 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="97471c8b-c00a-4313-8552-53ec90d76fb6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/truls.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/SudokuINFT1003.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/SudokuINFT1003.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/truls.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/truls.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sudoku.js" beforeDir="false" afterPath="$PROJECT_DIR$/sudoku.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sudoku.css" beforeDir="false" afterPath="$PROJECT_DIR$/sudoku.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sudoku.html" beforeDir="false" afterPath="$PROJECT_DIR$/sudoku.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -67,7 +65,7 @@
       <workItem from="1570885254817" duration="263000" />
       <workItem from="1571054778215" duration="3125000" />
       <workItem from="1571659505650" duration="521000" />
-      <workItem from="1572775840978" duration="927000" />
+      <workItem from="1572775840978" duration="4021000" />
     </task>
     <servers />
   </component>

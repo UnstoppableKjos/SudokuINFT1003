@@ -5,7 +5,9 @@
       <w>generer</w>
       <w>kolonne</w>
       <w>laget</w>
+      <w>poengsum</w>
       <w>posisjon</w>
+      <w>regler</w>
       <w>rekursjon</w>
       <w>rekursjoner</w>
       <w>skriv</w>
@@ -13,6 +15,8 @@
       <w>tabell</w>
       <w>tallet</w>
       <w>valider</w>
+      <w>vanskelighetsgrad</w>
+      <w>vanskelighetsvalg</w>
     </words>
   </dictionary>
 </component>

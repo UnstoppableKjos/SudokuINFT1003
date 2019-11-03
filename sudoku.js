@@ -35,7 +35,7 @@ $(document).ready(function(){
 });
 
 // Oppretter en tom tabell for alle tallene på brettet
-var tabell = [[],[],[],[],[],[],[],[],[]]
+var tabell = [[],[],[],[],[],[],[],[],[]];
 
 // Funksjon som finner første ledige celle i tabellen
 function finnCelle() {
@@ -145,6 +145,7 @@ function checkInput(cell) {
   if (isNaN(input) ||
       (cell.value).slice(0, 1) == 0 ||
       (cell.value).slice(0, 1) == "+" ||
+      (cell.value).slice(0, 1) == "." ||
       (cell.value).slice(0, 1) == "-") {
         cell.value = (cell.value).slice(1, 2);
   } else if (input < 0 ||

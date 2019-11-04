@@ -15,9 +15,9 @@
         Rutenettet er også delt inn i 9 mindre rutenett der hvert av dem og bare kan inneholde ett av hvert tall.</p>
     </div><br>
     <div id="vanskelighetsvalg">
-      <button class="vanskelighetsgrad">Lett</button>
-      <button class="vanskelighetsgrad">Medium</button>
-      <button class="vanskelighetsgrad">Vanskelig</button>
+      <button class="vanskelighetsgrad" onclick="lagSudoku(38)">Lett</button>
+      <button class="vanskelighetsgrad" onclick="lagSudoku(30)">Medium</button>
+      <button class="vanskelighetsgrad" onclick="lagSudoku(25)">Vanskelig</button>
     </div><br>
 
     <div id="brett"></div>
@@ -25,7 +25,7 @@
       <p>Poengsum:</p>
     </div>
     <div id="ui">
-      <input type="button" value="Løs brett" onclick="genererSudoku();skrivUt();">
+      <button onclick="løsSudoku();skrivUt();">Løs brett</button>
     </div>
   </body>
 

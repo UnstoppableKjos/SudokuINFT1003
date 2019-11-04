@@ -18,31 +18,39 @@ $(document).ready(function(){
     $(this)[0].setSelectionRange(0, 0);
   });
 
-  // Setter startpunkt for ytelsesmåling
+});
+
+function lagSudoku(diff) {
   var t0 = performance.now();
 
-  // Lager et fullstendig utfylt brett
-  genererSudoku();
-  // Fjerner tall for å gjøre brettet spillbart
-  fjernTall();
-  // Skriver ut brettet
-  skrivUt();
+  opprettTabell(); // Oppretter et tomt brett
+  løsSudoku(tilfeldigeTall()); // Genererer et tilfeldig ferdigutfylt brett
+  lagSpill(diff); // Fjerner tall for å gjøre brettet spillbart
+  skrivUt(); // Skriver ut brettet
 
   // Måler hvor lang tid det tar å generere brettet
   var t1 = performance.now();
   console.log("Brett laget på " + (t1 - t0) + " ms.");
+}
 
-});
-
-// Oppretter en tom tabell for alle tallene på brettet
-var tabell = [[],[],[],[],[],[],[],[],[]];
+// Oppretter en tabell som inneholder tallene på brettet
+// En tom posisjon markeres med tallet 0
+var tabell = [];
+function opprettTabell() {
+  for (i = 0; i < 9; i++) {
+    tabell[i] = [];
+    for (j = 0; j < 9; j++) {
+      tabell[i][j] = 0;
+    }
+  }
+}
 
 // Funksjon som finner første ledige celle i tabellen
 function finnCelle() {
-  var posisjon = [-1,-1];
+  let posisjon = [-1,-1];
   for (let i = 0; i < 9; i++) { // Går gjennom hver rad
     for (let j = 0; j < 9; j++) { // Går gjennom hver kolonne
-      if (typeof tabell[i][j] === "undefined") { // Sjekker om cellen er tom
+      if (tabell[i][j] === 0) { // Sjekker om cellen er tom
         posisjon[0] = i; // Legger til radnummer
         posisjon[1] = j; // Legger til kolonnenummer
         return posisjon; // Returnerer [i, j] ved tom celle
@@ -64,65 +72,103 @@ function valider(rad, kolonne, tallet) {
     return true; // Validering godkjennes hvis tallet ikke finnes fra før
 }
 
-var rekursjon = 0; // Teller for å se hvor mange funksjonskall som trengs for å generere brettet
-var test = true;
+// Funksjon som løser brettet
+function løsSudoku(tall) {
+  if (!tall) { // Hvis funksjonen ikke mottar spesifikke tall, bruk disse
+    tall = [1,2,3,4,5,6,7,8,9];
+  }
 
-// Funksjon for å fylle ut et fullstendig Sudoku-brett
-function genererSudoku() {
-  // Henter nummer for rad og kolonne på cellen som skal fylles ut
-  var celle = finnCelle();
-  var rad = celle[0]; //
-  var kolonne = celle[1];
+  // Finner neste ledige celle i tabellen
+  let celle = finnCelle();
+  let rad = celle[0];
+  let kolonne = celle[1];
 
   // Sjekker om det er flere tomme celler, avslutter funksjonen hvis alt er utfylt
-  if (rad == -1) {
-    console.log("Antall rekursjoner: " + rekursjon);
+  if (rad === -1) {
     return true;
-  } else {
-    rekursjon++; // Øker telleren for hver gang funksjonen må kjøres på nytt
   }
 
-  var tall = [1,2,3,4,5,6,7,8,9]; // Oppretter en matrise med mulige tall som kan fylles inn
-
-  while (tall.length) { // Så lenge det finnes mulige tall å velge
-    let indeks = Math.floor(Math.random() * tall.length); // Velger et tilfeldig tall
-    tallet = tall[indeks]; // Henter ut tallet
-    tall.splice(indeks, 1) // Fjerner tallet fra mulige valg
-    console.log("Forsøker " + tallet + " i celle " + (rad + 1) + "," + (kolonne + 1));
+  for (let i = 0; i < 9; i++) {
+    tallet = tall[i]; // Forsøker å løse med tallene som funksjonen har mottatt som argument
+    //console.log("Forsøker " + tallet + " i celle " + rad + "," + kolonne);
     if (valider(rad, kolonne, tallet)) { // Sjekker om valgt tall er gyldig i cellen
         tabell[rad][kolonne] = tallet; // Legger til tallet
-        console.log(tallet + " er gyldig, legger til")
-        if (genererSudoku()) { // Avslutter og går til neste celle dersom det har blitt fylt inn et tall
+        //console.log(tallet + " er gyldig, legger til")
+        if (løsSudoku(tall)) { // Avslutter og går til neste celle dersom det har blitt fylt inn et tall
             return true;
         }
-        tabell[rad][kolonne] = undefined; // Setter den sist utfylte cellen som tom hvis ingen flere tall er gyldige
+        //console.log("Ingen gyldige tall, setter " + rad + "," + kolonne + " som tom");
+        tabell[rad][kolonne] = 0; // Setter den sist utfylte cellen som tom hvis ingen flere tall er gyldige
     } else {
-      console.log("Ikke gyldig, velger et nytt tall");
+      //console.log("Ikke gyldig, velger et nytt tall");
     }
   }
-  console.log("Ingen gyldige tall, går tilbake til forrige celle")
   return false;
 }
 
-// Funksjon for å fjerne tilfeldige tall, for å lage et spillbart brett
+// lager en matrise med tallene 1 - 9 i tilfeldig rekkefølge
+// Brukes for å generere tilfeldige brett
+function tilfeldigeTall() {
+  let mulig = [1,2,3,4,5,6,7,8,9];
+  let tall = [];
+  while (mulig.length) {
+    let indeks = Math.floor(Math.random() * mulig.length); // Velger en tilfeldig indeks
+    tall.push(mulig[indeks]); // Henter ut tallet på denne indeksen og legger til i ny matrise
+    mulig.splice(indeks, 1) // Fjerner tallet fra mulige valg
+  }
+  return tall;
+}
 
-/* ***************************************************************************
-***** OBS! Kun laget for å få testet andre funksjoner!                   *****
-***** Fjerner helt tilfeldige tall, så brettet har ikke en unik løsning. *****
-*************************************************************************** */
+// Brukes av lagSpill for å fjerne tall fra brettet
+function fjernTall(indekser) {
+  for (let i = 0; i < indekser.length; i++) {
+    let x = indekser[i].slice(0, 1); // Indeks for rad hentes fra [*][]
+    let y = indekser[i].slice(1, 2); // Indeks for kolonne hentes fra [][*]
+    tabell[x][y] = 0; // Fjerner tallet fra valgt indeks
+  }
+}
 
-function fjernTall() {
-  var antallTall = 81;
-  var antallHint = 30;
-  while (antallTall > antallHint) {
-    // Genererer to tilfeldige tall mellom 0 og 8 for å velge indeksen til en tilfeldig celle
+// Finner ut hvilke tall som kan fjernes for å lage et spillbart brett med unik løsning
+function lagSpill(diff) { // Mottar vanskelighetsgrad som argument
+  let antallHint = diff; // Antall hint som skal være igjen på brettet
+  let antallTall = 81 - antallHint; // Antall tall som må fjernes
+  let indekser = []; // Holder styr på hvilke celler som kan tømmes
+
+  while (indekser.length < antallTall) {
+    // Genererer to tilfeldige tall mellom 0 og 8 for å velge indeksen til en celle
     let x = Math.floor(Math.random() * 9);
     let y = Math.floor(Math.random() * 9);
-    // Fjerner tallet hvis det ikke har blitt fjernet fra før
-    if (typeof tabell[x][y] !== "undefined") {
-      tabell[x][y] = undefined;
-      antallTall--;
+    let posisjon = [x,y]; // Legger posisjonen for valgt celle i en matrise
+
+    if (tabell[x][y] !== 0) { // Sjekker om tallet allerede er fjernet fra valgt posisjon
+      console.log("Funnet " + indekser.length + " celler.");
+      indekser.push(posisjon); // Legger til posisjonen i matrise for celler som kan tømmes
+
+      let tall1 = [1,2,3,4,5,6,7,8,9]; // Forsøker å løse brettet. Sjekker tallene 1 til 9 sekvensielt.
+      løsSudoku(tall1);
+      var løsning1 = JSON.parse(JSON.stringify(tabell)); // Legger det løste brettet fra forsøk 1 i en egen matrise
+
+      fjernTall(indekser); // Tømmer cellene igjen før løsningsforsøk 2
+
+      let tall2 = [9,8,7,6,5,4,3,2,1]; // Forsøker å løse brettet. Sjekker tallene 1 til 9 i motsatt rekkefølge.
+      løsSudoku(tall2);
+      var løsning2 = JSON.parse(JSON.stringify(tabell)); // Legger det løste brettet fra forsøk 2 i en egen matrise
+
+      // Sjekker om de to løsningene er like. Hvis de er forskjellige, har ikke brettet en unik løsning.
+      // Fjerner indeksen for den siste valgte cellen, slik at funksjonen kan prøve med en annen celle.
+      for (i = 0; i < 9; i++) {
+        for (j = 0; j < 9; j++) {
+          if (løsning1[i][j] != [løsning2[i][j]]) {
+            console.log("Ikke unik løsning. Prøver et annet tall.")
+            indekser.pop(); // Fjerner den siste indeksen i matrisen
+            break; // Avslutter løkken dersom den finner en ulikhet
+          }
+        }
+      }
     }
+    fjernTall(indekser); // Tømmer cellene som er funnet så langt
+    // Dersom antall indekser er mindre enn nødvendig, forsøker funksjonen å tømme en ny celle
+    // Dersom antall indekser er OK, er funksjonen ferdig og et spillbart brett kan skrives ut
   }
 }
 
@@ -130,8 +176,8 @@ function fjernTall() {
 function skrivUt() {
   for (let i = 0; i < 9; i++) {
     for (let j = 0; j < 9; j++) {
-      $("tr:eq("+i+") td:eq("+j+") input").val(tabell[i][j]);
-      if (typeof tabell[i][j] !== "undefined") {
+      if (tabell[i][j] > 0) {
+        $("tr:eq("+i+") td:eq("+j+") input").val(tabell[i][j]);
         $("tr:eq("+i+") td:eq("+j+") input").prop("disabled", true);
       }
     }

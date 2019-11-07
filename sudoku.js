@@ -37,6 +37,7 @@ function lagSudoku(diff) {
 // En tom posisjon markeres med tallet 0
 var tabell = [];
 function opprettTabell() {
+  tabell = [];
   for (i = 0; i < 9; i++) {
     tabell[i] = [];
     for (j = 0; j < 9; j++) {
@@ -141,7 +142,7 @@ function lagSpill(diff) { // Mottar vanskelighetsgrad som argument
     let posisjon = [x,y]; // Legger posisjonen for valgt celle i en matrise
 
     if (tabell[x][y] !== 0) { // Sjekker om tallet allerede er fjernet fra valgt posisjon
-      console.log("Funnet " + indekser.length + " celler.");
+      //console.log("Funnet " + indekser.length + " celler.");
       indekser.push(posisjon); // Legger til posisjonen i matrise for celler som kan tømmes
 
       let tall1 = [1,2,3,4,5,6,7,8,9]; // Forsøker å løse brettet. Sjekker tallene 1 til 9 sekvensielt.
@@ -159,7 +160,7 @@ function lagSpill(diff) { // Mottar vanskelighetsgrad som argument
       for (i = 0; i < 9; i++) {
         for (j = 0; j < 9; j++) {
           if (løsning1[i][j] != [løsning2[i][j]]) {
-            console.log("Ikke unik løsning. Prøver et annet tall.")
+            // console.log("Ikke unik løsning. Prøver et annet tall.");
             indekser.pop(); // Fjerner den siste indeksen i matrisen
             break; // Avslutter løkken dersom den finner en ulikhet
           }
@@ -179,6 +180,10 @@ function skrivUt() {
       if (tabell[i][j] > 0) {
         $("tr:eq("+i+") td:eq("+j+") input").val(tabell[i][j]);
         $("tr:eq("+i+") td:eq("+j+") input").prop("disabled", true);
+      }
+      else {
+        $("tr:eq("+i+") td:eq("+j+") input").val("");
+        $("tr:eq("+i+") td:eq("+j+") input").prop("disabled", false);
       }
     }
   }

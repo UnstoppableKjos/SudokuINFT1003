@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="97471c8b-c00a-4313-8552-53ec90d76fb6" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/tekst.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/truls.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/truls.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sudoku.css" beforeDir="false" afterPath="$PROJECT_DIR$/sudoku.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sudoku.html" beforeDir="false" afterPath="$PROJECT_DIR$/sudoku.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sudoku.js" beforeDir="false" afterPath="$PROJECT_DIR$/sudoku.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -11,6 +14,13 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="CSS File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -21,6 +31,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />

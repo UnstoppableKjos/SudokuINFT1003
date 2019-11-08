@@ -160,7 +160,7 @@ function lagSpill(diff) { // Mottar vanskelighetsgrad som argument
       for (i = 0; i < 9; i++) {
         for (j = 0; j < 9; j++) {
           if (løsning1[i][j] != [løsning2[i][j]]) {
-            // console.log("Ikke unik løsning. Prøver et annet tall.");
+            console.log("Ikke unik løsning. Prøver et annet tall.");
             indekser.pop(); // Fjerner den siste indeksen i matrisen
             break; // Avslutter løkken dersom den finner en ulikhet
           }

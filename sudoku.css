@@ -69,47 +69,6 @@ tr:nth-child(n+7) td:nth-child(n+7) input {
   background-color: transparent;
 }
 
-
-
-div {
-    font-family: "Arial", Gadget, sans-serif;
-}
-
-#regler {
-    width: 452px;
-    padding: 5px;
-    border: 3px solid #4CAF50;;
-    border-radius: 10px;
-}
-
-#vanskelighetsvalg {
-    width: 452px;
-    display: flex;
-    justify-content: space-around;
-}
-
-.vanskelighetsgrad {
-    width: 30%;
-    background-color: white;
-    color:black;
-    border: 2px solid #4CAF50;
-    border-radius: 5px;
-}
-
-.vanskelighetsgrad:hover:enabled {
-    background-color: lightgray;
-    cursor: pointer;
-}
-
-#poengsum > :first-child {
-    width: 452px;
-    padding: 5px;
-    background-color: white;
-    color:black;
-    border: 3px solid #4CAF50;
-    border-radius: 5px;
-}
-
 #ui input {
     background-color: white;
     color:black;

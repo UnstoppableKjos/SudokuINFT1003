@@ -6,6 +6,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="sudoku.js"></script>
     <link rel="stylesheet" type="text/css" href="sudoku.css">
+    <link rel="stylesheet" type="text/css" href="tekst.css">
     <title>Sudoku</title>
   </head>
 
@@ -20,10 +21,11 @@
       <button class="vanskelighetsgrad" onclick="lagSudoku(25)">Vanskelig</button>
     </div><br>
 
-    <div id="brett"></div>
-    <div id="poengsum">
-      <p>Poengsum:</p>
-    </div>
+    <div id="brett"></div><br>
+    <div id="tellere">
+      <label for="poeng">Poengsum: </label><p id="poeng">0</p>
+      <label for="tid">Tid: </label><p id="tid">0</p>
+    </div><br>
     <div id="ui">
       <button onclick="løsSudoku();skrivUt();">Løs brett</button>
     </div>

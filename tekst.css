@@ -1,0 +1,48 @@
+
+div {
+    font-family: "Arial", Gadget, sans-serif;
+}
+
+#regler {
+    width: 452px;
+    padding: 5px;
+    border: 3px solid #4CAF50;;
+    border-radius: 10px;
+    text-align: justify;
+}
+
+#vanskelighetsvalg {
+    width: 452px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.vanskelighetsgrad {
+    width: 30%;
+    background-color: white;
+    color:black;
+    border: 2px solid #4CAF50;
+    border-radius: 5px;
+}
+
+.vanskelighetsgrad:hover:enabled {
+    background-color: lightgray;
+    cursor: pointer;
+}
+
+#tellere {
+    width: 460px;
+    background-color: white;
+    color:black;
+    border: 3px solid #4CAF50;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+#poeng {
+    display: inline;
+}
+
+#tid {
+    display: inline;
+}

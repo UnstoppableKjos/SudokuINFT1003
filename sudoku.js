@@ -5,7 +5,7 @@ $(document).ready(function(){
   for (let i = 0; i < 9; i++) {
     brett += "<tr>";
     for (let j = 0; j < 9; j++) {
-      brett += "<td><input class='celle' type='text' oninput='checkInput(this)'></td>";
+      brett += "<td><input class='celle' type='text' disabled></td>";
     }
     brett += "</tr>";
   }
@@ -14,8 +14,29 @@ $(document).ready(function(){
 
   // Flytter musepeker før tallet når man klikker på en celle, eller skriver inn et tall
   // Gjør at tallet kan endres uten å klikke på cellen på nytt
-  $(".celle").on("click input", function() {
+  $(".celle").on("click keydown", function() {
     $(this)[0].setSelectionRange(0, 0);
+  });
+
+  /* Sjekker at det man skriver inn på brettet kun er tall fra 1 - 9,
+  og om tallet eventuelt er gyldig i forhold til løsningen */
+  $(".celle").on("input", function() {
+    let ugyldig = ["0", "+", "-", "."]; // Ugyldige tegn som ikke kan skrives inn
+    let input = $(this).val();
+    if (isNaN(input) || ugyldig.indexOf(input.slice(0, 1)) > -1) {
+      $(this).val(input.slice(1, 2));
+    } else if (input < 0 ||input > 10 || input.length > 1) {
+      $(this).val(input.slice(0, -1)); // Kutter av alle karakterer etter den første
+    }
+    // Finner indeksen til cellen som er fylt inn
+    let rad = $(this).closest("tr").index();
+    let kolonne = $(this).closest("td").index();
+    // Sjekker om tallet stemmer med løsningen
+    if ($(this).val() != løsning1[rad][kolonne]) {
+      $(this).css("background-color", "red");
+    } else {
+      $(this).css("background-color", "");
+    }
   });
 
 });
@@ -27,6 +48,7 @@ function lagSudoku(diff) {
   løsSudoku(tilfeldigeTall()); // Genererer et tilfeldig ferdigutfylt brett
   lagSpill(diff); // Fjerner tall for å gjøre brettet spillbart
   skrivUt(); // Skriver ut brettet
+  console.log(løsning1.toString());
 
   // Måler hvor lang tid det tar å generere brettet
   var t1 = performance.now();
@@ -129,6 +151,10 @@ function fjernTall(indekser) {
   }
 }
 
+// Brukes i funksjonen under for å generere brettet, og for å validere det spilleren skriver inn
+var løsning1;
+var løsning2;
+
 // Finner ut hvilke tall som kan fjernes for å lage et spillbart brett med unik løsning
 function lagSpill(diff) { // Mottar vanskelighetsgrad som argument
   let antallHint = diff; // Antall hint som skal være igjen på brettet
@@ -147,13 +173,13 @@ function lagSpill(diff) { // Mottar vanskelighetsgrad som argument
 
       let tall1 = [1,2,3,4,5,6,7,8,9]; // Forsøker å løse brettet. Sjekker tallene 1 til 9 sekvensielt.
       løsSudoku(tall1);
-      var løsning1 = JSON.parse(JSON.stringify(tabell)); // Legger det løste brettet fra forsøk 1 i en egen matrise
+      løsning1 = JSON.parse(JSON.stringify(tabell)); // Legger det løste brettet fra forsøk 1 i en egen matrise
 
       fjernTall(indekser); // Tømmer cellene igjen før løsningsforsøk 2
 
       let tall2 = [9,8,7,6,5,4,3,2,1]; // Forsøker å løse brettet. Sjekker tallene 1 til 9 i motsatt rekkefølge.
       løsSudoku(tall2);
-      var løsning2 = JSON.parse(JSON.stringify(tabell)); // Legger det løste brettet fra forsøk 2 i en egen matrise
+      løsning2 = JSON.parse(JSON.stringify(tabell)); // Legger det løste brettet fra forsøk 2 i en egen matrise
 
       // Sjekker om de to løsningene er like. Hvis de er forskjellige, har ikke brettet en unik løsning.
       // Fjerner indeksen for den siste valgte cellen, slik at funksjonen kan prøve med en annen celle.
@@ -186,22 +212,5 @@ function skrivUt() {
         $("tr:eq("+i+") td:eq("+j+") input").prop("disabled", false);
       }
     }
-  }
-}
-
-/* Tar inn et <input> element og sjekker om det kun står ett siffer mellom 1 og 9 der.
-  Fjerner alt annet */
-function checkInput(cell) {
-  let input = Number(cell.value);
-  if (isNaN(input) ||
-      (cell.value).slice(0, 1) == 0 ||
-      (cell.value).slice(0, 1) == "+" ||
-      (cell.value).slice(0, 1) == "." ||
-      (cell.value).slice(0, 1) == "-") {
-        cell.value = (cell.value).slice(1, 2);
-  } else if (input < 0 ||
-             input > 10 ||
-             cell.value.length > 1) {
-    cell.value = (cell.value).slice(0, -1); // Kutter av alle karakterer etter den første
   }
 }

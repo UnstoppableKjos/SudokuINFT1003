@@ -49,7 +49,9 @@ function lagSudoku(diff) {
   lagSpill(diff); // Fjerner tall for å gjøre brettet spillbart
   skrivUt(); // Skriver ut brettet
   console.log(løsning1.toString());
-
+  // Starter ny timer og stopper etter behov
+  stopCounter();
+  window.timer = setInterval(counter,1000);
   // Måler hvor lang tid det tar å generere brettet
   var t1 = performance.now();
   console.log("Brett laget på " + (t1 - t0) + " ms.");
@@ -212,5 +214,31 @@ function skrivUt() {
         $("tr:eq("+i+") td:eq("+j+") input").prop("disabled", false);
       }
     }
+  }
+}
+
+// Legger til leading zeros for å få timeren til å se bedre ut
+Number.prototype.pad = function(size) {
+  let s = String(this);
+  while (s.length < (size || 2)) {s = "0" + s;}
+  return s;
+};
+
+let currentTimer = 0;
+
+// Teller hvert sekund
+function counter() {
+  let min = Math.floor(currentTimer / 60);
+  let sec = currentTimer % 60;
+  $("#tid").html(`${min.pad()}:${sec.pad()}`);
+  currentTimer++;
+}
+
+// Stopper og nullstiller timeren
+function stopCounter() {
+  if (currentTimer > 0) {
+    clearInterval(timer);
+    currentTimer = 0;
+    $("#tid").html("00:00");
   }
 }

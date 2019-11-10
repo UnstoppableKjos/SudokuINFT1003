@@ -137,7 +137,7 @@ function sjekkBrett() {
   losteCeller++;
   if (losteCeller === 81) {
     clearInterval(timer);
-    updateScore(Math.floor(diffMultiplier * (25000/currentTimer)));
+    updateScore(Math.ceil(diffMultiplier * (30650/Math.pow(currentTimer, 2/3))));
   }
 }
 

@@ -43,8 +43,11 @@ $(document).ready(function(){
     if (tall === true) {
       if ($(this).val() != løsning1[rad][kolonne]) {
         $(this).css("background-color", "red");
+        forsok[rad][kolonne]++;
       } else {
         $(this).css("background-color", "");
+        score += Math.floor(100 / forsok[rad][kolonne]);
+        $("#poeng").html(score);
       }
     }
   });
@@ -76,7 +79,6 @@ $(document).ready(function(){
 
 function lagSudoku(diff) {
   var t0 = performance.now();
-
   opprettTabell(); // Oppretter et tomt brett
   løsSudoku(tilfeldigeTall()); // Genererer et tilfeldig ferdigutfylt brett
   lagSpill(diff); // Fjerner tall for å gjøre brettet spillbart
@@ -85,10 +87,29 @@ function lagSudoku(diff) {
   // Starter ny timer og stopper etter behov
   stopCounter();
   window.timer = setInterval(counter,1000);
+  window.forsok = resetScore();
   // Måler hvor lang tid det tar å generere brettet
   var t1 = performance.now();
   console.log("Brett laget på " + (t1 - t0) + " ms.");
 }
+
+let score = 0;
+
+function resetScore() {
+  score = 0;
+  return [
+    [1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1]
+  ];
+}
+
 
 // Oppretter en tabell som inneholder tallene på brettet
 // En tom posisjon markeres med tallet 0
@@ -259,7 +280,7 @@ Number.prototype.pad = function(size) {
 
 let currentTimer = 0;
 
-// Teller hvert sekund
+// Teller hvert sekund og skriver det ut på en pen måte
 function counter() {
   let min = Math.floor(currentTimer / 60);
   let sec = currentTimer % 60;

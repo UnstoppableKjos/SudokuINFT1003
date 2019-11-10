@@ -1,3 +1,12 @@
+// Globale variabler som brukes av de ulike funksjonene
+
+let tabell = []; // Inneholder det spillbare brettet
+let løsning1; // Brukes for å generere brettet, og for å validere det spilleren skriver inn
+let løsning2;
+let score = 0; // Holder oversikt over poengsummen
+let forsok; // Antall forsøk på å skrive inn tall i hver celle
+let timer; // Hvor lang tid man bruker på å fullføre spillet
+
 $(document).ready(function(){
 
   // Genererer brettet
@@ -79,7 +88,7 @@ $(document).ready(function(){
 });
 
 function lagSudoku(diff) {
-  var t0 = performance.now();
+  let t0 = performance.now();
   opprettTabell(); // Oppretter et tomt brett
   løsSudoku(tilfeldigeTall()); // Genererer et tilfeldig ferdigutfylt brett
   lagSpill(diff); // Fjerner tall for å gjøre brettet spillbart
@@ -87,15 +96,13 @@ function lagSudoku(diff) {
   console.log(løsning1.toString());
   // Starter ny timer og stopper etter behov
   stopCounter();
-  window.timer = setInterval(counter,1000);
-  window.forsok = resetScore();
+  timer = setInterval(counter,1000);
+  forsok = resetScore();
   // Måler hvor lang tid det tar å generere brettet
-  var t1 = performance.now();
+  let t1 = performance.now();
   console.log("Brett laget på " + (t1 - t0) + " ms.");
 }
 
-
-let score = 0;
 // Nullstiller poengsummen og gir en ny forsøkstabell
 function resetScore() {
   score = 0;
@@ -112,10 +119,8 @@ function resetScore() {
   ];
 }
 
-
 // Oppretter en tabell som inneholder tallene på brettet
 // En tom posisjon markeres med tallet 0
-var tabell = [];
 function opprettTabell() {
   tabell = [];
   for (i = 0; i < 9; i++) {
@@ -208,10 +213,6 @@ function fjernTall(indekser) {
     tabell[x][y] = 0; // Fjerner tallet fra valgt indeks
   }
 }
-
-// Brukes i funksjonen under for å generere brettet, og for å validere det spilleren skriver inn
-var løsning1;
-var løsning2;
 
 // Finner ut hvilke tall som kan fjernes for å lage et spillbart brett med unik løsning
 function lagSpill(diff) { // Mottar vanskelighetsgrad som argument

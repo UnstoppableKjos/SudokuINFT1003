@@ -21,21 +21,54 @@ $(document).ready(function(){
   /* Sjekker at det man skriver inn på brettet kun er tall fra 1 - 9,
   og om tallet eventuelt er gyldig i forhold til løsningen */
   $(".celle").on("input", function() {
-    let ugyldig = ["0", "+", "-", "."]; // Ugyldige tegn som ikke kan skrives inn
-    let input = $(this).val();
-    if (isNaN(input) || ugyldig.indexOf(input.slice(0, 1)) > -1) {
-      $(this).val(input.slice(1, 2));
-    } else if (input < 0 ||input > 10 || input.length > 1) {
-      $(this).val(input.slice(0, -1)); // Kutter av alle karakterer etter den første
-    }
     // Finner indeksen til cellen som er fylt inn
     let rad = $(this).closest("tr").index();
     let kolonne = $(this).closest("td").index();
+
+    let tall = true;
+
+    let ugyldig = ["0", "+", "-", "."]; // Ugyldige tegn som ikke kan skrives inn
+
+    let input = $(this).val();
+
+    if (isNaN(input) || ugyldig.indexOf(input.slice(0, 1)) > -1) {
+      $(this).val(input.slice(1, 2)); // Fjerner tegn hvis det er ugyldig
+      tall = false;
+    } else if (input < 0 ||input > 10 || input.length > 1) {
+      $(this).val(input.slice(0, -1)); // Kutter av alle tegm etter den første
+    }
+
     // Sjekker om tallet stemmer med løsningen
-    if ($(this).val() != løsning1[rad][kolonne]) {
-      $(this).css("background-color", "red");
-    } else {
-      $(this).css("background-color", "");
+    // Gjøres kun dersom input er tall fra 1 - 9
+    if (tall === true) {
+      if ($(this).val() != løsning1[rad][kolonne]) {
+        $(this).css("background-color", "red");
+      } else {
+        $(this).css("background-color", "");
+      }
+    }
+  });
+
+  // Definerer antall hint på hver vanskelighetsgrad, og kjører funksjonen for å lage brettet
+  $(".vanskelighetsgrad").click(function() {
+    let tekst = $(this).text();
+    let diff;
+    if (tekst == "Lett") {
+      diff = 38;
+    } else if (tekst == "Medium") {
+      diff = 30;
+    } else if (tekst == "Vanskelig") {
+      diff = 25;
+    }
+    lagSudoku(diff);
+    $(".celle").css("background-color", "");
+  });
+
+  $(".løsbrett").click(function() {
+    if (tabell.length > 0) {
+      $(".celle").css("background-color", "");
+      løsSudoku();
+      skrivUt();
     }
   });
 
@@ -48,7 +81,7 @@ function lagSudoku(diff) {
   løsSudoku(tilfeldigeTall()); // Genererer et tilfeldig ferdigutfylt brett
   lagSpill(diff); // Fjerner tall for å gjøre brettet spillbart
   skrivUt(); // Skriver ut brettet
-  console.log(løsning1.toString());
+  //console.log(løsning1.toString());
 
   // Måler hvor lang tid det tar å generere brettet
   var t1 = performance.now();
@@ -186,7 +219,7 @@ function lagSpill(diff) { // Mottar vanskelighetsgrad som argument
       for (i = 0; i < 9; i++) {
         for (j = 0; j < 9; j++) {
           if (løsning1[i][j] != [løsning2[i][j]]) {
-            console.log("Ikke unik løsning. Prøver et annet tall.");
+            //console.log("Ikke unik løsning. Prøver et annet tall.");
             indekser.pop(); // Fjerner den siste indeksen i matrisen
             break; // Avslutter løkken dersom den finner en ulikhet
           }

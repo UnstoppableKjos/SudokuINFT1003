@@ -46,6 +46,7 @@ $(document).ready(function(){
         forsok[rad][kolonne]++;
       } else {
         $(this).css("background-color", "");
+        $(this).prop("disabled", true);
         score += Math.floor(100 / forsok[rad][kolonne]);
         $("#poeng").html(score);
       }
@@ -93,8 +94,9 @@ function lagSudoku(diff) {
   console.log("Brett laget på " + (t1 - t0) + " ms.");
 }
 
-let score = 0;
 
+let score = 0;
+// Nullstiller poengsummen og gir en ny forsøkstabell
 function resetScore() {
   score = 0;
   return [

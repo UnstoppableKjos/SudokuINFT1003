@@ -3,7 +3,6 @@
 let tabell = []; // Inneholder det spillbare brettet
 let løsning1, løsning2; // Brukes for å generere brettet, og for å validere det spilleren skriver inn
 let score = 0; // Holder oversikt over poengsummen
-let scores = [];
 let forsok; // Antall forsøk på å skrive inn tall i hver celle
 let timer; // Incrementer currenttimer hvert sekund
 let currentTimer = 0; // Hvor lang tid man har brukt på spillet
@@ -91,6 +90,10 @@ $(document).ready(function(){
       skrivUt();
     }
   });
+
+  // Laster inn highscores
+  readScore();
+
 });
 
 function lagSudoku(diff) {
@@ -99,14 +102,14 @@ function lagSudoku(diff) {
   løsSudoku(tilfeldigeTall()); // Genererer et tilfeldig ferdigutfylt brett
   lagSpill(diff); // Fjerner tall for å gjøre brettet spillbart
   skrivUt(); // Skriver ut brettet
+  let t1 = performance.now();
+  console.log("Brett laget på " + (t1 - t0) + " ms.");
   console.log(løsning1.toString());
   // Starter ny timer og stopper etter behov
   stopCounter();
   timer = setInterval(counter,1000);
   forsok = resetScore();
   // Måler hvor lang tid det tar å generere brettet
-  let t1 = performance.now();
-  console.log("Brett laget på " + (t1 - t0) + " ms.");
 }
 
 // Nullstiller poengsummen og gir en ny forsøkstabell
@@ -126,25 +129,27 @@ function resetScore() {
   ];
 }
 
-function printScores() {
-  let scoreList = "";
-  for (let entry of scores) {
-    scoreList += `<li>${entry[0]} - ${entry[1]}</li>`;
-  }
-  $("#highscores").html(scoreList);
-}
-
-
 // Oppdaterer poengsummen med verdien som tas inn
 function updateScore(points) {
-  console.log(points + ' poeng');
+  console.log(points + " poeng");
   score += points;
   $("#poeng").html(`Poengsum: ${score}`);
 }
 
-function registerScore() {
-  scores.push([prompt("Du vant, gratulerer! Hva er navnet ditt?"), score]);
-  printScores();
+// Henter liste over highscores fra database
+function readScore() {
+  $("#highscore").load("readscore.php");
+}
+
+// Legger til poeng i databasen
+function writeScore() {
+  let spiller = prompt("Gratulerer, du vant! Skriv inn navnet ditt for å lagre poengsummen");
+  if (spiller != null) {
+    $.post("writescore.php", {
+      spiller: spiller, score: score
+    });
+    readScore();
+  }
 }
 
 // Sjekker om brettet er løst. Stopper timer og gir poeng dersom det er det
@@ -153,7 +158,7 @@ function sjekkBrett() {
   if (losteCeller === 81) {
     clearInterval(timer);
     updateScore(Math.ceil(diffMultiplier * (30650/Math.pow(currentTimer, 2/3))));
-    registerScore();
+    writeScore();
   }
 }
 

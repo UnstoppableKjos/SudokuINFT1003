@@ -3,6 +3,7 @@
 let tabell = []; // Inneholder det spillbare brettet
 let løsning1, løsning2; // Brukes for å generere brettet, og for å validere det spilleren skriver inn
 let score = 0; // Holder oversikt over poengsummen
+let scores = [];
 let forsok; // Antall forsøk på å skrive inn tall i hver celle
 let timer; // Incrementer currenttimer hvert sekund
 let currentTimer = 0; // Hvor lang tid man har brukt på spillet
@@ -69,7 +70,7 @@ $(document).ready(function(){
     let tekst = $(this).text();
     let diff;
     if (tekst == "Lett") {
-      diff = 38;
+      diff = 80;
       diffMultiplier = 1;
     } else if (tekst == "Medium") {
       diff = 30;
@@ -111,7 +112,7 @@ function lagSudoku(diff) {
 // Nullstiller poengsummen og gir en ny forsøkstabell
 function resetScore() {
   score = 0;
-  $("#poeng").html(score);
+  $("#poeng").html(`Poengsum: ${score}`);
   return [
     [1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -125,11 +126,25 @@ function resetScore() {
   ];
 }
 
+function printScores() {
+  let scoreList = "";
+  for (let entry of scores) {
+    scoreList += `<li>${entry[0]} - ${entry[1]}</li>`;
+  }
+  $("#highscores").html(scoreList);
+}
+
+
 // Oppdaterer poengsummen med verdien som tas inn
 function updateScore(points) {
   console.log(points + ' poeng');
   score += points;
-  $("#poeng").html(score);
+  $("#poeng").html(`Poengsum: ${score}`);
+}
+
+function registerScore() {
+  scores.push([prompt("Du vant, gratulerer! Hva er navnet ditt?"), score]);
+  printScores();
 }
 
 // Sjekker om brettet er løst. Stopper timer og gir poeng dersom det er det
@@ -138,6 +153,7 @@ function sjekkBrett() {
   if (losteCeller === 81) {
     clearInterval(timer);
     updateScore(Math.ceil(diffMultiplier * (30650/Math.pow(currentTimer, 2/3))));
+    registerScore();
   }
 }
 
@@ -307,7 +323,7 @@ Number.prototype.pad = function(size) {
 function counter() {
   let min = Math.floor(currentTimer / 60);
   let sec = currentTimer % 60;
-  $("#tid").html(`${min.pad()}:${sec.pad()}`);
+  $("#tid").html(`Tid: ${min.pad()}:${sec.pad()}`);
   currentTimer++;
 }
 
@@ -316,6 +332,6 @@ function stopCounter() {
   if (currentTimer > 0) {
     clearInterval(timer);
     currentTimer = 0;
-    $("#tid").html("00:00");
+    $("#tid").html("Tid: 00:00");
   }
 }

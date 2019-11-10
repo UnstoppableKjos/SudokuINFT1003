@@ -1,11 +1,13 @@
 // Globale variabler som brukes av de ulike funksjonene
 
 let tabell = []; // Inneholder det spillbare brettet
-let løsning1; // Brukes for å generere brettet, og for å validere det spilleren skriver inn
-let løsning2;
+let løsning1, løsning2; // Brukes for å generere brettet, og for å validere det spilleren skriver inn
 let score = 0; // Holder oversikt over poengsummen
 let forsok; // Antall forsøk på å skrive inn tall i hver celle
-let timer; // Hvor lang tid man bruker på å fullføre spillet
+let timer; // Incrementer currenttimer hvert sekund
+let currentTimer = 0; // Hvor lang tid man har brukt på spillet
+let losteCeller; // Teller hvor mange celler som er løste
+let diffMultiplier; // Koeffisient til endelig poengsum utifra vanskelighetsgrad
 
 $(document).ready(function(){
 
@@ -56,8 +58,8 @@ $(document).ready(function(){
       } else {
         $(this).css("background-color", "");
         $(this).prop("disabled", true);
-        score += Math.floor(100 / forsok[rad][kolonne]);
-        $("#poeng").html(score);
+        updateScore(Math.floor(100 / forsok[rad][kolonne]));
+        sjekkBrett();
       }
     }
   });
@@ -68,11 +70,15 @@ $(document).ready(function(){
     let diff;
     if (tekst == "Lett") {
       diff = 38;
+      diffMultiplier = 1;
     } else if (tekst == "Medium") {
       diff = 30;
+      diffMultiplier = 1.5;
     } else if (tekst == "Vanskelig") {
       diff = 25;
+      diffMultiplier = 2;
     }
+    losteCeller = diff;
     lagSudoku(diff);
     $(".celle").css("background-color", "");
   });
@@ -84,7 +90,6 @@ $(document).ready(function(){
       skrivUt();
     }
   });
-
 });
 
 function lagSudoku(diff) {
@@ -106,6 +111,7 @@ function lagSudoku(diff) {
 // Nullstiller poengsummen og gir en ny forsøkstabell
 function resetScore() {
   score = 0;
+  $("#poeng").html(score);
   return [
     [1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -117,6 +123,22 @@ function resetScore() {
     [1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1]
   ];
+}
+
+// Oppdaterer poengsummen med verdien som tas inn
+function updateScore(points) {
+  console.log(points + ' poeng');
+  score += points;
+  $("#poeng").html(score);
+}
+
+// Sjekker om brettet er løst. Stopper timer og gir poeng dersom det er det
+function sjekkBrett() {
+  losteCeller++;
+  if (losteCeller === 81) {
+    clearInterval(timer);
+    updateScore(Math.floor(diffMultiplier * (25000/currentTimer)));
+  }
 }
 
 // Oppretter en tabell som inneholder tallene på brettet
@@ -280,8 +302,6 @@ Number.prototype.pad = function(size) {
   while (s.length < (size || 2)) {s = "0" + s;}
   return s;
 };
-
-let currentTimer = 0;
 
 // Teller hvert sekund og skriver det ut på en pen måte
 function counter() {

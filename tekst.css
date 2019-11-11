@@ -39,6 +39,8 @@ div {
     padding: 5px;
     display: flex;
     justify-content: space-around;
+    align-items: center;
+    height: 30px;
 }
 
 #poeng {
@@ -55,9 +57,9 @@ div {
     color:black;
     border: 3px solid #4CAF50;
     border-radius: 5px;
-    padding: 5px;
-    width: 200px;
+    width: 210px;
     line-height: 30px;
+    text-align: center;
 }
 
 #wrapper {
@@ -68,13 +70,15 @@ div {
     width: 452px;
     display: flex;
     justify-content: space-around;
+    align-items: center;
 }
 
 .løsbrett {
     width: 30%;
+    height: 46px;
     background-color: white;
     color:black;
-    border: 2px solid #4CAF50;
+    border: 3px solid #4CAF50;
     border-radius: 5px;
 }
 

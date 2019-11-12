@@ -70,7 +70,7 @@ $(document).ready(function(){
     let tekst = $(this).text();
     let diff;
     if (tekst == "Lett") {
-      diff = 80;
+      diff = 38;
       vanskelighetsgrad = "Lett";
       diffMultiplier = 1;
     } else if (tekst == "Medium") {
@@ -84,7 +84,10 @@ $(document).ready(function(){
     }
     losteCeller = diff;
     lagSudoku(diff);
+
+    // Fjerner eventuelle gamle cellemarkeringer
     $(".celle").css("background-color", "");
+    $("td").css("background-color", "");
   });
 
   $(".løsbrett").click(function() {
@@ -125,7 +128,7 @@ $(document).ready(function(){
       for (i = 0; i < 9; i++) {
         for (j = 0; j < 9; j++) {
           if ($("tr:eq("+i+") td:eq("+j+") input").val() == tall) {
-            $("tr:eq("+i+") td:eq("+j+")").css("background-color", farge);
+            $("tr:eq("+i+") td:eq("+j+") input").css("background-color", farge);
           }
         }
       }
@@ -137,7 +140,7 @@ $(document).ready(function(){
 function lagSudoku(diff) {
   let t0 = performance.now();
   opprettTabell(); // Oppretter et tomt brett
-  løsSudoku(tilfeldigeTall()); // Genererer et tilfeldig ferdigutfylt brett
+  løsSudoku(); // Genererer et tilfeldig ferdigutfylt brett
   lagSpill(diff); // Fjerner tall for å gjøre brettet spillbart
   skrivUt(); // Skriver ut brettet
   let t1 = performance.now();
@@ -241,8 +244,8 @@ function valider(rad, kolonne, tallet) {
 
 // Funksjon som løser brettet
 function løsSudoku(tall) {
-  if (!tall) { // Hvis funksjonen ikke mottar spesifikke tall, bruk disse
-    tall = [1,2,3,4,5,6,7,8,9];
+  if (!tall) { // Hvis funksjonen ikke mottar en spesifikk tallrekkefølge, bruk denne
+    tall = tilfeldigeTall();
   }
 
   // Finner neste ledige celle i tabellen

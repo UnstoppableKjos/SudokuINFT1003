@@ -70,7 +70,7 @@ $(document).ready(function(){
     let tekst = $(this).text();
     let diff;
     if (tekst == "Lett") {
-      diff = 38;
+      diff = 80;
       vanskelighetsgrad = "Lett";
       diffMultiplier = 1;
     } else if (tekst == "Medium") {
@@ -85,9 +85,8 @@ $(document).ready(function(){
     losteCeller = diff;
     lagSudoku(diff);
 
-    // Fjerner eventuelle gamle cellemarkeringer
-    $(".celle").css("background-color", "");
-    $("td").css("background-color", "");
+    $(".celle, td").css("background-color", ""); // Fjerner eventuelle gamle cellemarkeringer
+    $("#brett").css("background-image", "");
   });
 
   $(".løsbrett").click(function() {
@@ -105,7 +104,7 @@ $(document).ready(function(){
   $(".celle").click(function() {
     let farge = "LightGray";
 
-    $(".celle").parent().css("background-color", "");
+    $(".celle, td").css("background-color", "");
 
     let rad = $(this).closest("tr").index();
     let kolonne = $(this).closest("td").index();
@@ -197,6 +196,8 @@ function writeScore() {
 function sjekkBrett() {
   losteCeller++;
   if (losteCeller === 81) {
+    $(".celle, td").css("background-color", ""); // Fjerner cellemarkeringer
+    $("#brett").css("background-image", "linear-gradient(rgba(255,255,255,0.5), rgba(255,255,255,0.5)), url(" + gif() + ")");
     clearInterval(timer);
     updateScore(Math.ceil(diffMultiplier * (30650/Math.pow(currentTimer, 2/3))));
     writeScore();
@@ -380,4 +381,16 @@ function stopCounter() {
     currentTimer = 0;
     $("#tid").html("Tid: 00:00");
   }
+}
+
+// Tull og tøys
+function gif() {
+  let gif = [];
+  gif[0] = "https://media.giphy.com/media/Gf3fU0qPtI6uk/giphy.gif";
+  gif[1] = "https://media.giphy.com/media/zd9wcDX4H4z4I/giphy.gif";
+  gif[2] = "https://media.giphy.com/media/fA81FF4mdE6lgeoJwb/giphy.gif";
+  gif[3] = "https://media.giphy.com/media/YnBntKOgnUSBkV7bQH/giphy.gif";
+  gif[4] = "https://media.giphy.com/media/S6qkS0ETvel6EZat45/giphy.gif";
+  let i = Math.floor(Math.random() * 5);
+  return gif[i];
 }

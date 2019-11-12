@@ -16,7 +16,7 @@ $(document).ready(function(){
   for (let i = 0; i < 9; i++) {
     brett += "<tr>";
     for (let j = 0; j < 9; j++) {
-      brett += "<td><input class='celle' type='text' disabled></td>";
+      brett += "<td><input class='celle' type='text' readonly></td>";
     }
     brett += "</tr>";
   }
@@ -57,7 +57,7 @@ $(document).ready(function(){
         forsok[rad][kolonne]++;
       } else {
         $(this).css("background-color", "");
-        $(this).prop("disabled", true);
+        $(this).prop("readonly", true);
         updateScore(Math.floor(100 / forsok[rad][kolonne]));
         sjekkBrett();
       }
@@ -69,7 +69,7 @@ $(document).ready(function(){
     let tekst = $(this).text();
     let diff;
     if (tekst == "Lett") {
-      diff = 80;
+      diff = 38;
       diffMultiplier = 1;
     } else if (tekst == "Medium") {
       diff = 30;
@@ -93,6 +93,40 @@ $(document).ready(function(){
 
   // Laster inn highscores
   readScore();
+
+  // Setter bakgrunnsfarge på celler som er relatert til den man klikker på
+  $(".celle").click(function() {
+    let farge = "LightGray";
+
+    $(".celle").parent().css("background-color", "");
+
+    let rad = $(this).closest("tr").index();
+    let kolonne = $(this).closest("td").index();
+
+    for (i = 0; i < 9; i++) {
+      let j = 3 * Math.floor(rad / 3) + Math.floor(i / 3);
+      let k = 3 * Math.floor(kolonne / 3) + i % 3;
+      $("tr:eq("+j+") td:eq("+k+")").css("background-color", farge);
+      $("tr:eq("+rad+") td:eq("+i+")").css("background-color", farge);
+      $("tr:eq("+i+") td:eq("+kolonne+")").css("background-color", farge);
+    }
+  });
+
+  // Merker alle like tall på brettet
+  $(".celle").click(function() {
+    let farge = "#00509e";
+
+    let tall = $(this).val();
+    if (tall != "") {
+      for (i = 0; i < 9; i++) {
+        for (j = 0; j < 9; j++) {
+          if ($("tr:eq("+i+") td:eq("+j+") input").val() == tall) {
+            $("tr:eq("+i+") td:eq("+j+")").css("background-color", farge);
+          }
+        }
+      }
+    }
+  });
 
 });
 
@@ -307,11 +341,11 @@ function skrivUt() {
     for (let j = 0; j < 9; j++) {
       if (tabell[i][j] > 0) {
         $("tr:eq("+i+") td:eq("+j+") input").val(tabell[i][j]);
-        $("tr:eq("+i+") td:eq("+j+") input").prop("disabled", true);
+        $("tr:eq("+i+") td:eq("+j+") input").prop("readonly", true);
       }
       else {
         $("tr:eq("+i+") td:eq("+j+") input").val("");
-        $("tr:eq("+i+") td:eq("+j+") input").prop("disabled", false);
+        $("tr:eq("+i+") td:eq("+j+") input").prop("readonly", false);
       }
     }
   }

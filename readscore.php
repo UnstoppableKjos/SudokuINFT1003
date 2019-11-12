@@ -1,21 +1,30 @@
 <?php
   require "tilkobling.php";
 
-  $sql = "SELECT spiller, tidspunkt, score FROM sudoku ORDER BY score DESC LIMIT 10";
+  $vanskelighetsgrad = array("Lett", "Medium", "Vanskelig");
 
-  mysqli_query($tilkobling, $sql);
+  foreach ($vanskelighetsgrad as $val) {
+    $sql = "SELECT spiller, tidspunkt, score FROM sudoku WHERE vanskelighetsgrad = '$val' ORDER BY score DESC LIMIT 10";
 
-  $resultat = mysqli_query($tilkobling, $sql);
+    mysqli_query($tilkobling, $sql);
 
-  echo "<ol>";
-  while ($rad = mysqli_fetch_array($resultat)) {
-    $spiller = $rad['spiller'];
-    $score =  $rad['score'];
-    $tidspunkt = date_create($rad['tidspunkt']);
-    $tid = date_format($tidspunkt, "d.m.Y H:i");
-    echo "<li>$spiller: $score poeng</li>";
+    $resultat = mysqli_query($tilkobling, $sql);
+
+    if(mysqli_num_rows($resultat) > 0) {
+      echo "<ol>";
+      echo "$val";
+      while ($rad = mysqli_fetch_array($resultat)) {
+        $spiller = $rad['spiller'];
+        $score =  $rad['score'];
+        $tidspunkt = date_create($rad['tidspunkt']);
+        $tid = date_format($tidspunkt, "d.m.Y H:i");
+
+        echo "<li>$spiller: $score</li>";
+      }
+      echo "</ol>";
+    }
   }
-  echo "</ol>";
 
   mysqli_close($tilkobling);
+
 ?>

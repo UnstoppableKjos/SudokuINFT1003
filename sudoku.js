@@ -3,6 +3,7 @@
 let tabell = []; // Inneholder det spillbare brettet
 let løsning1, løsning2; // Brukes for å generere brettet, og for å validere det spilleren skriver inn
 let score = 0; // Holder oversikt over poengsummen
+let vanskelighetsgrad; // Enten "Lett", "Medium" eller "Vanskelig"
 let forsok; // Antall forsøk på å skrive inn tall i hver celle
 let timer; // Incrementer currenttimer hvert sekund
 let currentTimer = 0; // Hvor lang tid man har brukt på spillet
@@ -69,13 +70,16 @@ $(document).ready(function(){
     let tekst = $(this).text();
     let diff;
     if (tekst == "Lett") {
-      diff = 38;
+      diff = 80;
+      vanskelighetsgrad = "Lett";
       diffMultiplier = 1;
     } else if (tekst == "Medium") {
       diff = 30;
+      vanskelighetsgrad = "Medium";
       diffMultiplier = 1.5;
     } else if (tekst == "Vanskelig") {
       diff = 25;
+      vanskelighetsgrad = "Vanskelig";
       diffMultiplier = 2;
     }
     losteCeller = diff;
@@ -180,7 +184,7 @@ function writeScore() {
   let spiller = prompt("Gratulerer, du vant! Skriv inn navnet ditt for å lagre poengsummen");
   if (spiller != null) {
     $.post("writescore.php", {
-      spiller: spiller, score: score
+      spiller: spiller, score: score, vanskelighetsgrad: vanskelighetsgrad
     });
     readScore();
   }

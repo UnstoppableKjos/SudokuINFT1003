@@ -70,15 +70,15 @@ $(document).ready(function(){
     let tekst = $(this).text();
     let diff;
     if (tekst == "Lett") {
-      diff = 80;
+      diff = 38;
       vanskelighetsgrad = "Lett";
       diffMultiplier = 1;
     } else if (tekst == "Medium") {
-      diff = 30;
+      diff = 32;
       vanskelighetsgrad = "Medium";
       diffMultiplier = 1.5;
     } else if (tekst == "Vanskelig") {
-      diff = 25;
+      diff = 26;
       vanskelighetsgrad = "Vanskelig";
       diffMultiplier = 2;
     }
@@ -207,7 +207,6 @@ function sjekkBrett() {
 // Oppretter en tabell som inneholder tallene på brettet
 // En tom posisjon markeres med tallet 0
 function opprettTabell() {
-  tabell = [];
   for (i = 0; i < 9; i++) {
     tabell[i] = [];
     for (j = 0; j < 9; j++) {
@@ -245,10 +244,6 @@ function valider(rad, kolonne, tallet) {
 
 // Funksjon som løser brettet
 function løsSudoku(tall) {
-  if (!tall) { // Hvis funksjonen ikke mottar en spesifikk tallrekkefølge, bruk denne
-    tall = tilfeldigeTall();
-  }
-
   // Finner neste ledige celle i tabellen
   let celle = finnCelle();
   let rad = celle[0];
@@ -259,8 +254,14 @@ function løsSudoku(tall) {
     return true;
   }
 
+  let randoms = tilfeldigeTall();
+
   for (let i = 0; i < 9; i++) {
-    tallet = tall[i]; // Forsøker å løse med tallene som funksjonen har mottatt som argument
+    if (!tall) {
+      tallet = randoms[i];
+    } else {
+      tallet = tall[i]; // Forsøker å løse med tallene som funksjonen har mottatt som argument
+    }
     //console.log("Forsøker " + tallet + " i celle " + rad + "," + kolonne);
     if (valider(rad, kolonne, tallet)) { // Sjekker om valgt tall er gyldig i cellen
         tabell[rad][kolonne] = tallet; // Legger til tallet
@@ -304,7 +305,6 @@ function lagSpill(diff) { // Mottar vanskelighetsgrad som argument
   let antallHint = diff; // Antall hint som skal være igjen på brettet
   let antallTall = 81 - antallHint; // Antall tall som må fjernes
   let indekser = []; // Holder styr på hvilke celler som kan tømmes
-
   while (indekser.length < antallTall) {
     // Genererer to tilfeldige tall mellom 0 og 8 for å velge indeksen til en celle
     let x = Math.floor(Math.random() * 9);

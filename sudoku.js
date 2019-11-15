@@ -1,7 +1,6 @@
 // Globale variabler som brukes av de ulike funksjonene
-
 let tabell = []; // Inneholder det spillbare brettet
-let løsning1, løsning2; // Brukes for å generere brettet, og for å validere det spilleren skriver inn
+let losning1, losning2; // Brukes for å generere brettet, og for å validere det spilleren skriver inn
 let score = 0; // Holder oversikt over poengsummen
 let vanskelighetsgrad; // Enten "Lett", "Medium" eller "Vanskelig"
 let forsok; // Antall forsøk på å skrive inn tall i hver celle
@@ -11,33 +10,35 @@ let losteCeller; // Teller hvor mange celler som er løste
 let diffMultiplier; // Koeffisient til endelig poengsum utifra vanskelighetsgrad
 
 $(document).ready(function(){
-
   // Genererer brettet
-  let brett = "<table id='brett'>";
+  let brett = "<table>";
+  let notater = "<table>";
   for (let i = 0; i < 9; i++) {
     brett += "<tr>";
+    notater += "<tr>";
     for (let j = 0; j < 9; j++) {
       brett += "<td><input class='celle' type='text' readonly></td>";
+      notater += "<td><input class='notat' type='text'></td>";
     }
     brett += "</tr>";
+    notater += "</tr>";
   }
   brett += "</table>";
+  notater += "</table>";
   $("#brett").html(brett);
+  $("#notater").html(notater);
 
   // Flytter musepeker før tallet når man klikker på en celle, eller skriver inn et tall
   // Gjør at tallet kan endres uten å klikke på cellen på nytt
-  $(".celle").on("click keydown", function() {
+  $(".celle, .notat").on("click keydown", function() {
     $(this)[0].setSelectionRange(0, 0);
   });
 
-  /* Sjekker at det man skriver inn på brettet kun er tall fra 1 - 9,
-  og om tallet eventuelt er gyldig i forhold til løsningen */
-  $(".celle").on("input", function() {
+  // Sjekker at det man skriver inn på brettet kun er tall fra 1 - 9
+  $(".celle, .notat").on("input", function() {
     // Finner indeksen til cellen som er fylt inn
     let rad = $(this).closest("tr").index();
     let kolonne = $(this).closest("td").index();
-
-    let tall = true;
 
     let ugyldig = ["0", "+", "-", "."]; // Ugyldige tegn som ikke kan skrives inn
 
@@ -45,23 +46,25 @@ $(document).ready(function(){
 
     if (isNaN(input) || ugyldig.indexOf(input.slice(0, 1)) > -1) {
       $(this).val(input.slice(1, 2)); // Fjerner tegn hvis det er ugyldig
-      tall = false;
     } else if (input < 0 ||input > 10 || input.length > 1) {
       $(this).val(input.slice(0, -1)); // Kutter av alle tegm etter den første
     }
+  });
 
-    // Sjekker om tallet stemmer med løsningen
-    // Gjøres kun dersom input er tall fra 1 - 9
-    if (tall === true) {
-      if ($(this).val() != løsning1[rad][kolonne]) {
-        $(this).css("background-color", "red");
-        forsok[rad][kolonne]++;
-      } else {
-        $(this).css("background-color", "");
-        $(this).prop("readonly", true);
-        updateScore(Math.floor(100 / forsok[rad][kolonne]));
-        sjekkBrett();
-      }
+  // Sjekker om tallet stemmer med løsningen
+  $(".celle").on("input", function() {
+    // Finner indeksen til cellen som er fylt inn
+    let rad = $(this).closest("tr").index();
+    let kolonne = $(this).closest("td").index();
+
+    if ($(this).val() != losning1[rad][kolonne]) {
+      $(this).css("text-shadow", "0 0 red");
+      forsok[rad][kolonne]++;
+    } else {
+      $(this).css("text-shadow", "0 0 black");
+      $(this).prop("readonly", true);
+      updateScore(Math.floor(100 / forsok[rad][kolonne]));
+      sjekkBrett();
     }
   });
 
@@ -85,49 +88,65 @@ $(document).ready(function(){
     losteCeller = diff;
     lagSudoku(diff);
 
-    $(".celle, td").css("background-color", ""); // Fjerner eventuelle gamle cellemarkeringer
-    $("#brett").css("background-image", "");
+    fjernFarge();
   });
 
-  $(".løsbrett").click(function() {
+  $("#losbrett").click(function() {
     if (tabell.length > 0) {
       $(".celle").css("background-color", "");
-      løsSudoku();
+      losSudoku();
       skrivUt();
     }
   });
 
+  $("#noter").click(function() {
+    if ($("#notater").css("z-index") == -1) {
+        fjernFarge();
+        $(this).css("background-color", "#00509e");
+        $("#notater").removeClass("farge");
+        $("#brett").addClass("farge");
+        $("#notater").css("z-index", 1);
+      } else {
+        fjernFarge();
+        $(this).css("background-color", "");
+        $("#brett").removeClass("farge");
+        $("#notater").addClass("farge");
+        $("#notater").css("z-index", -1);
+    }
+  })
+
   // Laster inn highscores
   readScore();
 
-  // Setter bakgrunnsfarge på celler som er relatert til den man klikker på
-  $(".celle").click(function() {
-    let farge = "LightGray";
-
-    $(".celle, td").css("background-color", "");
+  // Setter bakgrunnsfarger ved klikk
+  $(".celle, .notat").click(function() {
+    let farge1 = "LightGray";
+    let farge2 = "#00509e";
+    fjernFarge();
 
     let rad = $(this).closest("tr").index();
     let kolonne = $(this).closest("td").index();
+    let tall = $("#brett tr:eq("+rad+") td:eq("+kolonne+") input").val()
 
-    for (i = 0; i < 9; i++) {
+    // Bakgrunnsfarge på tilhørende rad, kolonne og 3x3-boks
+    for (let i = 0; i < 9; i++) {
       let j = 3 * Math.floor(rad / 3) + Math.floor(i / 3);
       let k = 3 * Math.floor(kolonne / 3) + i % 3;
-      $("tr:eq("+j+") td:eq("+k+")").css("background-color", farge);
-      $("tr:eq("+rad+") td:eq("+i+")").css("background-color", farge);
-      $("tr:eq("+i+") td:eq("+kolonne+")").css("background-color", farge);
+      $(".farge tr:eq("+j+") td:eq("+k+")").css("background-color", farge1);
+      $(".farge tr:eq("+rad+") td:eq("+i+")").css("background-color", farge1);
+      $(".farge tr:eq("+i+") td:eq("+kolonne+")").css("background-color", farge1);
     }
-  });
 
-  // Merker alle like tall på brettet
-  $(".celle").click(function() {
-    let farge = "#00509e";
+    // Bakgrunnsfarge på cellen som det er klikket på
+    $(".farge tr:eq("+rad+") td:eq("+kolonne+")").css("background-color", farge2);
 
-    let tall = $(this).val();
+    // Bakgrunnsfarge på alle like tall
     if (tall != "") {
-      for (i = 0; i < 9; i++) {
-        for (j = 0; j < 9; j++) {
-          if ($("tr:eq("+i+") td:eq("+j+") input").val() == tall) {
-            $("tr:eq("+i+") td:eq("+j+") input").css("background-color", farge);
+      for (let x = 0; x < 9; x++) {
+        for (y = 0; y < 9; y++) {
+          if ($("#brett tr:eq("+x+") td:eq("+y+") input").val() == tall) {
+            console.log("OK");
+            $(".farge tr:eq("+x+") td:eq("+y+")").css("background-color", farge2);
           }
         }
       }
@@ -136,15 +155,22 @@ $(document).ready(function(){
 
 });
 
+// Fjerner eventuelle gamle cellemarkeringer
+function fjernFarge() {
+  $("td").css("background-color", "");
+  $("#brett input").css("text-shadow", "0 0 black");
+  $("#brett").css("background-image", "");
+}
+
 function lagSudoku(diff) {
   let t0 = performance.now();
   opprettTabell(); // Oppretter et tomt brett
-  løsSudoku(); // Genererer et tilfeldig ferdigutfylt brett
+  losSudoku(); // Genererer et tilfeldig ferdigutfylt brett
   lagSpill(diff); // Fjerner tall for å gjøre brettet spillbart
   skrivUt(); // Skriver ut brettet
   let t1 = performance.now();
   console.log("Brett laget på " + (t1 - t0) + " ms.");
-  console.log(løsning1.toString());
+  console.log(losning1.toString());
   // Starter ny timer og stopper etter behov
   stopCounter();
   timer = setInterval(counter,1000);
@@ -243,7 +269,7 @@ function valider(rad, kolonne, tallet) {
 }
 
 // Funksjon som løser brettet
-function løsSudoku(tall) {
+function losSudoku(tall) {
   // Finner neste ledige celle i tabellen
   let celle = finnCelle();
   let rad = celle[0];
@@ -266,7 +292,7 @@ function løsSudoku(tall) {
     if (valider(rad, kolonne, tallet)) { // Sjekker om valgt tall er gyldig i cellen
         tabell[rad][kolonne] = tallet; // Legger til tallet
         //console.log(tallet + " er gyldig, legger til")
-        if (løsSudoku(tall)) { // Avslutter og går til neste celle dersom det har blitt fylt inn et tall
+        if (losSudoku(tall)) { // Avslutter og går til neste celle dersom det har blitt fylt inn et tall
             return true;
         }
         //console.log("Ingen gyldige tall, setter " + rad + "," + kolonne + " som tom");
@@ -316,20 +342,20 @@ function lagSpill(diff) { // Mottar vanskelighetsgrad som argument
       indekser.push(posisjon); // Legger til posisjonen i matrise for celler som kan tømmes
 
       let tall1 = [1,2,3,4,5,6,7,8,9]; // Forsøker å løse brettet. Sjekker tallene 1 til 9 sekvensielt.
-      løsSudoku(tall1);
-      løsning1 = JSON.parse(JSON.stringify(tabell)); // Legger det løste brettet fra forsøk 1 i en egen matrise
+      losSudoku(tall1);
+      losning1 = JSON.parse(JSON.stringify(tabell)); // Legger det løste brettet fra forsøk 1 i en egen matrise
 
       fjernTall(indekser); // Tømmer cellene igjen før løsningsforsøk 2
 
       let tall2 = [9,8,7,6,5,4,3,2,1]; // Forsøker å løse brettet. Sjekker tallene 1 til 9 i motsatt rekkefølge.
-      løsSudoku(tall2);
-      løsning2 = JSON.parse(JSON.stringify(tabell)); // Legger det løste brettet fra forsøk 2 i en egen matrise
+      losSudoku(tall2);
+      losning2 = JSON.parse(JSON.stringify(tabell)); // Legger det løste brettet fra forsøk 2 i en egen matrise
 
       // Sjekker om de to løsningene er like. Hvis de er forskjellige, har ikke brettet en unik løsning.
       // Fjerner indeksen for den siste valgte cellen, slik at funksjonen kan prøve med en annen celle.
       for (i = 0; i < 9; i++) {
         for (j = 0; j < 9; j++) {
-          if (løsning1[i][j] != [løsning2[i][j]]) {
+          if (losning1[i][j] != [losning2[i][j]]) {
             //console.log("Ikke unik løsning. Prøver et annet tall.");
             indekser.pop(); // Fjerner den siste indeksen i matrisen
             break; // Avslutter løkken dersom den finner en ulikhet

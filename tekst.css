@@ -76,8 +76,8 @@ div {
     align-items: center;
 }
 
-.løsbrett {
-    width: 30%;
+.knapp {
+    width: 75px;
     height: 46px;
     background-color: white;
     color:black;
@@ -85,7 +85,7 @@ div {
     border-radius: 5px;
 }
 
-.løsbrett:hover:enabled {
+.knapp:hover {
     background-color: lightgray;
     cursor: pointer;
 }

@@ -3,6 +3,11 @@
   background-size: cover;
 }
 
+#notater {
+  position: absolute;
+  z-index: -1;
+}
+
 table {
     border-collapse: collapse;
 }
@@ -28,28 +33,37 @@ tr:nth-child(3n) td {
 	border-bottom: 3px solid black;
 }
 
-.celle {
-  background-color: transparent;
+.celle, .notat {
+  color: transparent; /* Gjør at musepekeren ikke vises i valgt celle */
+  text-shadow: 0 0 black;
   text-align: center;
-	padding: 0;
+  background-color: transparent;
 	border: 0;
   margin: 0;
+}
+
+.celle:focus, .notat:focus {
+  outline: none;
+  text-shadow: 0 0 white;
+}
+
+.celle:hover, .notat:hover {
+  cursor: pointer;
+  background-color: #00509e;
+}
+
+.celle {
+  padding: 0;
   height: 50px;
 	width: 50px;
   font-size: 25px;
 }
 
-#brett input:hover {
-  background-color: #00509e;
-  cursor: pointer;
-}
-
-#brett input:focus {
-  outline: none;
-  background-color: #00509e;
-  /* Gjør at musepekeren ikke vises i valgt celle */
-  color: transparent;
-  text-shadow: 0 0 white;
+.notat {
+  padding-right: 25px;
+  padding-bottom: 24px;
+  height: 25px;
+	width: 25px;
 }
 
 /* Setter bakgrunnsfarge på annenhver 3x3-boks. OBS! Deaktivert*/

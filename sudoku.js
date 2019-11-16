@@ -18,7 +18,7 @@ $(document).ready(function(){
     notater += "<tr>";
     for (let j = 0; j < 9; j++) {
       brett += "<td><input class='celle' type='text' readonly></td>";
-      notater += "<td><input class='notat' type='text'></td>";
+      notater += "<td><textarea class='notat'></textarea></td>";
     }
     brett += "</tr>";
     notater += "</tr>";
@@ -30,41 +30,73 @@ $(document).ready(function(){
 
   // Flytter musepeker før tallet når man klikker på en celle, eller skriver inn et tall
   // Gjør at tallet kan endres uten å klikke på cellen på nytt
-  $(".celle, .notat").on("click keydown", function() {
+  $(".celle").on("click keydown", function() {
     $(this)[0].setSelectionRange(0, 0);
   });
 
-  // Sjekker at det man skriver inn på brettet kun er tall fra 1 - 9
-  $(".celle, .notat").on("input", function() {
-    // Finner indeksen til cellen som er fylt inn
+  // Validerer input til notater
+  $(".notat").on("input", function() {
+    // Finner indeksen til notatfeltet
     let rad = $(this).closest("tr").index();
     let kolonne = $(this).closest("td").index();
 
-    let ugyldig = ["0", "+", "-", "."]; // Ugyldige tegn som ikke kan skrives inn
+    $("#brett tr:eq("+rad+") td:eq("+kolonne+") input").val(""); // Fjerner tall fra brett
 
-    let input = $(this).val();
+    let input = $(this).val(); // Alt som er notert
+    let siste = input.slice(-1); // Det siste tallet som er notert
+    let antall = 0; // Hvor mange ganger et tall er skrevet inn
 
-    if (isNaN(input) || ugyldig.indexOf(input.slice(0, 1)) > -1) {
-      $(this).val(input.slice(1, 2)); // Fjerner tegn hvis det er ugyldig
-    } else if (input < 0 ||input > 10 || input.length > 1) {
-      $(this).val(input.slice(0, -1)); // Kutter av alle tegm etter den første
+    input = input.replace(/[^1-9]/g,""); // Fjerner alt untatt tallene 1-9
+    input = input.split(""); // Lager et array
+
+    // Sjekker om et tall er skrevet inn mer enn én gang
+    for (let i = 0; i < input.length; i++) {
+      if (input[i] === siste) {
+        antall++;
+      }
     }
+    // Fjerner et tall hvis det skrives inn to ganger
+    // Gjør at man kan toggle tall i notatene
+    if (antall > 1) { //
+      input = input.filter(function(tall) {
+        return tall != siste;
+      });
+    }
+
+    input.sort(); // Ordner tallene i riktig rekkefølge
+
+    input = input.join(" "); // Setter sammen arrayet til en ny tekststreng
+    $(this).val(input);
+  });
+
+  // Validerer input til brettet
+  $(".celle").on("input", function() {
+
   });
 
   // Sjekker om tallet stemmer med løsningen
   $(".celle").on("input", function() {
-    // Finner indeksen til cellen som er fylt inn
-    let rad = $(this).closest("tr").index();
-    let kolonne = $(this).closest("td").index();
+    let input = $(this).val();
+    input = input.replace(/[^1-9]/g,""); // Fjerner alt untatt tallene 1-9
+    input = input.charAt(0); // Gjør at kun ett tall kan skrives inn
+    $(this).val(input);
 
-    if ($(this).val() != losning1[rad][kolonne]) {
-      $(this).css("text-shadow", "0 0 red");
-      forsok[rad][kolonne]++;
-    } else {
-      $(this).css("text-shadow", "0 0 black");
-      $(this).prop("readonly", true);
-      updateScore(Math.floor(100 / forsok[rad][kolonne]));
-      sjekkBrett();
+    if ($(this).val() != "") {
+      // Finner indeksen til cellen som er fylt inn
+      let rad = $(this).closest("tr").index();
+      let kolonne = $(this).closest("td").index();
+
+      $("#notater tr:eq("+rad+") td:eq("+kolonne+") textarea").val(""); // Fjerner notater
+
+      if ($(this).val() != losning1[rad][kolonne]) {
+        $(this).css("text-shadow", "0 0 red");
+        forsok[rad][kolonne]++;
+      } else {
+        $(this).css("text-shadow", "0 0 black");
+        $(this).prop("readonly", true);
+        updateScore(Math.floor(100 / forsok[rad][kolonne]));
+        sjekkBrett();
+      }
     }
   });
 
@@ -87,8 +119,8 @@ $(document).ready(function(){
     }
     losteCeller = diff;
     lagSudoku(diff);
-
     fjernFarge();
+    $(".notat").val("");
   });
 
   $("#losbrett").click(function() {
@@ -101,14 +133,14 @@ $(document).ready(function(){
 
   $("#noter").click(function() {
     if ($("#notater").css("z-index") == -1) {
-        fjernFarge();
-        $(this).css("background-color", "#00509e");
+        $(this).css("background-color", "#00509e"); // Farge på knapp
+        $("td").css("background-color", ""); // Fjerner all bakgrunnsfarge på brettet
         $("#notater").removeClass("farge");
         $("#brett").addClass("farge");
         $("#notater").css("z-index", 1);
       } else {
-        fjernFarge();
         $(this).css("background-color", "");
+        $("td").css("background-color", "");
         $("#brett").removeClass("farge");
         $("#notater").addClass("farge");
         $("#notater").css("z-index", -1);
@@ -122,7 +154,8 @@ $(document).ready(function(){
   $(".celle, .notat").click(function() {
     let farge1 = "LightGray";
     let farge2 = "#00509e";
-    fjernFarge();
+
+    $("td").css("background-color", ""); // Fjerner tidligere farger
 
     let rad = $(this).closest("tr").index();
     let kolonne = $(this).closest("td").index();

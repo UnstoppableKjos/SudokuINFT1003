@@ -18,7 +18,7 @@ $(document).ready(function(){
     notater += "<tr>";
     for (let j = 0; j < 9; j++) {
       brett += "<td><input class='celle' type='text' readonly></td>";
-      notater += "<td><textarea class='notat'></textarea></td>";
+      notater += "<td><textarea class='notat' readonly></textarea></td>";
     }
     brett += "</tr>";
     notater += "</tr>";
@@ -34,6 +34,13 @@ $(document).ready(function(){
     $(this)[0].setSelectionRange(0, 0);
   });
 
+  // Flytter markør på slutten av innhold i notatfelt
+  $(".notat").on("click", function() {
+    let input = $(this).val();
+    $(this).val("");
+    $(this).val(input);
+  });
+
   // Validerer input til notater
   $(".notat").on("input", function() {
     // Finner indeksen til notatfeltet
@@ -43,35 +50,37 @@ $(document).ready(function(){
     $("#brett tr:eq("+rad+") td:eq("+kolonne+") input").val(""); // Fjerner tall fra brett
 
     let input = $(this).val(); // Alt som er notert
-    let siste = input.slice(-1); // Det siste tallet som er notert
-    let antall = 0; // Hvor mange ganger et tall er skrevet inn
 
     input = input.replace(/[^1-9]/g,""); // Fjerner alt untatt tallene 1-9
-    input = input.split(""); // Lager et array
 
-    // Sjekker om et tall er skrevet inn mer enn én gang
-    for (let i = 0; i < input.length; i++) {
-      if (input[i] === siste) {
-        antall++;
+    // Kjøres dersom det skrives inn mer en ett tall
+    if ($(this).val().length > 1) {
+      let siste = $(this).val().slice(-1); // Det siste tallet som er notert
+
+      input = input.split(""); // Lager et array
+
+      let antall = 0; // Hvor mange ganger et tall er skrevet inn
+
+      // Sjekker om et tall er skrevet inn mer enn én gang
+      for (let i = 0; i < input.length; i++) {
+        if (input[i] === siste) {
+          antall++;
+        }
       }
-    }
-    // Fjerner et tall hvis det skrives inn to ganger
-    // Gjør at man kan toggle tall i notatene
-    if (antall > 1) { //
-      input = input.filter(function(tall) {
-        return tall != siste;
-      });
+
+      // Fjerner et tall hvis det skrives inn to ganger
+      // Gjør at man kan toggle tall i notatene
+      if (antall > 1) { //
+        input = input.filter(function(tall) {
+          return tall != siste;
+        });
+      }
+
+      input.sort(); // Ordner tallene i riktig rekkefølge
+      input = input.join(" "); // Setter sammen arrayet til en ny tekststreng
     }
 
-    input.sort(); // Ordner tallene i riktig rekkefølge
-
-    input = input.join(" "); // Setter sammen arrayet til en ny tekststreng
     $(this).val(input);
-  });
-
-  // Validerer input til brettet
-  $(".celle").on("input", function() {
-
   });
 
   // Sjekker om tallet stemmer med løsningen
@@ -94,6 +103,7 @@ $(document).ready(function(){
       } else {
         $(this).css("text-shadow", "0 0 black");
         $(this).prop("readonly", true);
+        $("#notater tr:eq("+rad+") td:eq("+kolonne+") textarea").prop("readonly", true);
         updateScore(Math.floor(100 / forsok[rad][kolonne]));
         sjekkBrett();
       }
@@ -178,7 +188,6 @@ $(document).ready(function(){
       for (let x = 0; x < 9; x++) {
         for (y = 0; y < 9; y++) {
           if ($("#brett tr:eq("+x+") td:eq("+y+") input").val() == tall) {
-            console.log("OK");
             $(".farge tr:eq("+x+") td:eq("+y+")").css("background-color", farge2);
           }
         }
@@ -407,12 +416,14 @@ function skrivUt() {
   for (let i = 0; i < 9; i++) {
     for (let j = 0; j < 9; j++) {
       if (tabell[i][j] > 0) {
-        $("tr:eq("+i+") td:eq("+j+") input").val(tabell[i][j]);
-        $("tr:eq("+i+") td:eq("+j+") input").prop("readonly", true);
+        $("#brett tr:eq("+i+") td:eq("+j+") input").val(tabell[i][j]);
+        $("#brett tr:eq("+i+") td:eq("+j+") input").prop("readonly", true);
+        $("#notater tr:eq("+i+") td:eq("+j+") textarea").prop("readonly", true);
       }
       else {
-        $("tr:eq("+i+") td:eq("+j+") input").val("");
-        $("tr:eq("+i+") td:eq("+j+") input").prop("readonly", false);
+        $("#brett tr:eq("+i+") td:eq("+j+") input").val("");
+        $("#brett tr:eq("+i+") td:eq("+j+") input").prop("readonly", false);
+        $("#notater tr:eq("+i+") td:eq("+j+") textarea").prop("readonly", false);
       }
     }
   }

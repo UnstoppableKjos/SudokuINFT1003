@@ -5,6 +5,7 @@ let score = 0; // Holder oversikt over poengsummen
 let vanskelighetsgrad; // Enten "Lett", "Medium" eller "Vanskelig"
 let forsok; // Antall forsøk på å skrive inn tall i hver celle
 let timer; // Incrementer currenttimer hvert sekund
+let doTimer; // Om timeren skal gå eller ei
 let currentTimer = 0; // Hvor lang tid man har brukt på spillet
 let losteCeller; // Teller hvor mange celler som er løste
 let diffMultiplier; // Koeffisient til endelig poengsum utifra vanskelighetsgrad
@@ -251,8 +252,10 @@ function lagSudoku(diff) {
   console.log("Brett laget på " + (t1 - t0) + " ms.");
   console.log(losning1.toString());
   // Starter ny timer og stopper etter behov
-  stopCounter();
-  timer = setInterval(counter,1000);
+  resetCounter();
+  if (doTimer) {clearInterval(timer);}
+  doTimer = true;
+  timer = setInterval(counter, 1000);
   forsok = resetScore();
   // Måler hvor lang tid det tar å generere brettet
 }
@@ -303,7 +306,7 @@ function sjekkBrett() {
   if (losteCeller === 81) {
     $(".celle, td").css("background-color", ""); // Fjerner cellemarkeringer
     $("#brett").css("background-image", "linear-gradient(rgba(255,255,255,0.5), rgba(255,255,255,0.5)), url(" + gif() + ")");
-    clearInterval(timer);
+    doTimer = false;
     updateScore(Math.ceil(diffMultiplier * (30650/Math.pow(currentTimer, 2/3))));
     writeScore();
   }
@@ -475,19 +478,21 @@ Number.prototype.pad = function(size) {
 
 // Teller hvert sekund og skriver det ut på en pen måte
 function counter() {
-  let min = Math.floor(currentTimer / 60);
-  let sec = currentTimer % 60;
-  $("#tid").html(`Tid: ${min.pad()}:${sec.pad()}`);
-  currentTimer++;
+  if (!(doTimer)) {
+    clearInterval(timer);
+  }
+  else {
+    let min = Math.floor(currentTimer / 60);
+    let sec = currentTimer % 60;
+    $("#tid").html(`Tid: ${min.pad()}:${sec.pad()}`);
+    currentTimer++;
+  }
 }
 
 // Stopper og nullstiller timeren
-function stopCounter() {
-  if (currentTimer > 0) {
-    clearInterval(timer);
-    currentTimer = 0;
-    $("#tid").html("Tid: 00:00");
-  }
+function resetCounter() {
+  currentTimer = 0;
+  $("#tid").html("Tid: 00:00");
 }
 
 // Tull og tøys

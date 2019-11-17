@@ -160,16 +160,18 @@ $(document).ready(function(){
   // Laster inn highscores
   readScore();
 
-  // Setter bakgrunnsfarger ved klikk
-  $(".celle, .notat").click(function() {
+  // Setter bakgrunnsfarge ved fokus
+  $(".celle, .notat").focusin(function() {
+    $("td").css("background-color", "") // Fjern tidligere farge
+
     let farge1 = "LightGray";
     let farge2 = "#00509e";
 
-    $("td").css("background-color", ""); // Fjerner tidligere farger
-
     let rad = $(this).closest("tr").index();
     let kolonne = $(this).closest("td").index();
-    let tall = $("#brett tr:eq("+rad+") td:eq("+kolonne+") input").val()
+    let tall = $("#brett tr:eq("+rad+") td:eq("+kolonne+") input").val();
+
+    $(".farge tr:eq("+rad+") td:eq("+kolonne+")").children().css("background-color", "#00509e");
 
     // Bakgrunnsfarge på tilhørende rad, kolonne og 3x3-boks
     for (let i = 0; i < 9; i++) {
@@ -180,24 +182,59 @@ $(document).ready(function(){
       $(".farge tr:eq("+i+") td:eq("+kolonne+")").css("background-color", farge1);
     }
 
-    // Bakgrunnsfarge på cellen som det er klikket på
-    $(".farge tr:eq("+rad+") td:eq("+kolonne+")").css("background-color", farge2);
-
     // Bakgrunnsfarge på alle like tall
     if (tall != "") {
       for (let x = 0; x < 9; x++) {
         for (y = 0; y < 9; y++) {
           if ($("#brett tr:eq("+x+") td:eq("+y+") input").val() == tall) {
-            $(".farge tr:eq("+x+") td:eq("+y+")").css("background-color", farge2);
+            $(".farge tr:eq("+x+") td:eq("+y+")").css("background-color", farge);
           }
         }
       }
     }
   });
 
+  // Fjerner bakgrunnsfarge ved mistet fokus
+  $(".celle, .notat").focusout(function() {
+    $(".celle, .notat").css("background-color", "");
+  });
+
+  // Navigering med piltaster
+  $(".celle, .notat").keydown(function(event) {
+    let aktiv = $(this);
+    let neste = null;
+    let posisjon = $(this).closest("td").index();
+    let mulig = "input, textarea";
+    switch (event.keyCode) {
+        case 37: // Venstre
+            neste = aktiv.parent("td").prev().find(mulig);
+            break;
+        case 38: // Opp
+            neste = aktiv
+                .closest("tr")
+                .prev()
+                .find("td:eq("+posisjon+")")
+                .find(mulig);
+            break;
+        case 39: // Høyre
+            neste = aktiv.closest('td').next().find(mulig);
+            break;
+        case 40: // Ned
+            neste = aktiv
+                .closest("tr")
+                .next()
+                .find("td:eq("+posisjon+")")
+                .find(mulig);
+            break;
+    }
+    if (neste && neste.length) {
+        neste.focus();
+    }
+  });
+
 });
 
-// Fjerner eventuelle gamle cellemarkeringer
+// Fjerner bakgrunnsfarge og bakgrunnsbilde
 function fjernFarge() {
   $("td").css("background-color", "");
   $("#brett input").css("text-shadow", "0 0 black");

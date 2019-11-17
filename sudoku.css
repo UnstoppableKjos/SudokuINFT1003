@@ -36,7 +36,7 @@ tr:nth-child(3n) td {
 .celle, .notat {
   display: block;
   color: transparent; /* Gjør at musepekeren ikke vises i valgt celle */
-  text-shadow: 0 0 black; 
+  text-shadow: 0 0 black;
   text-align: center;
   background-color: transparent;
 	border: 0;

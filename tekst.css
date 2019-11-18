@@ -98,28 +98,50 @@ header h1 {
 }
 
 #highscore {
-    box-sizing: border-box;
-    border: 3px solid #00509e;
-    border-radius: 5px;
-    line-height: 30px;
-    text-align: center;
-    height: 468px;
+  box-sizing: border-box;
+  border: 3px solid #00509e;
+  border-radius: 5px;
+  padding-left: 10px;
+  line-height: 20px;
+  height: 468px;
+}
+
+#highscorelist table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+#highscorelist td {
+  border: none;
+}
+
+.highscore_nr {
+  width: 10%;
+}
+
+.highscore_spiller {
+  width: 60%;
+}
+
+.highscore_score {
+  width: 30%
 }
 
 #regler {
-    box-sizing: border-box;
-    padding: 5px;
-    border: 3px solid #00509e;;
-    border-radius: 10px;
-    text-align: justify;
-    margin-top: 10px;
-    width: 468px;
+  box-sizing: border-box;
+  padding: 5px;
+  border: 3px solid #00509e;;
+  border-radius: 10px;
+  text-align: justify;
+  margin-top: 10px;
+  width: 468px;
 }
 
-h3 {
-  margin: 0;
+h3, h4 {
+  margin: 10px 0 10px 0;
   font-family: 'Press Start 2P';
-  color: #00509e
+  color: #00509e;
 }
 
 #vanskelighetsgrad {
@@ -137,7 +159,6 @@ h3 {
   font-size: 10px;
   font-family: 'Press Start 2P';
   float: right;
-
 }
 
 #nyttspill {

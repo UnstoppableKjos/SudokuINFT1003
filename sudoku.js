@@ -116,7 +116,7 @@ $(document).ready(function(){
     let tekst = $("#vanskelighetsgrad select").val();
     let diff;
     if (tekst == "Lett") {
-      diff = 38;
+      diff = 80;
       vanskelighetsgrad = "Lett";
       diffMultiplier = 1;
     } else if (tekst == "Medium") {
@@ -262,7 +262,6 @@ function lagSudoku(diff) {
   skrivUt(); // Skriver ut brettet
   let t1 = performance.now();
   console.log("Brett laget på " + (t1 - t0) + " ms.");
-  console.log(losning1.toString());
   // Starter ny timer og stopper etter behov
   resetCounter();
   if (doTimer) {clearInterval(timer);}
@@ -298,12 +297,13 @@ function updateScore(points) {
 
 // Henter liste over highscores fra database
 function readScore() {
-  $("#highscore").load("readscore.php");
+  $("#highscorelist").load("readscore.php");
 }
 
 // Legger til poeng i databasen
 function writeScore() {
   let spiller = prompt("Gratulerer, du vant! Skriv inn navnet ditt for å lagre poengsummen");
+  spiller = spiller.substr(0, 16);
   if (spiller != null) {
     $.post("writescore.php", {
       spiller: spiller, score: score, vanskelighetsgrad: vanskelighetsgrad

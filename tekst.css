@@ -30,13 +30,33 @@ header h1 {
 }
 
 #om {
-  text-align: center;
+  text-align: right;
+  margin-right: 10px;
 }
 
-#content {
+#om a:link, #om a:visited {
+  background-color: #00509e;
+  color: white;
+  padding: 14px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+#om a:hover, #om a:active {
+  background-color: lightgray;
+  color: white;
+}
+
+#overskrift a {
+  color: #00509e;
+  text-decoration: none;
+}
+
+.content {
   display: flex;
   justify-content: center;
-  height: calc(100% - 75px);
+  min-height: calc(100% - 75px);
 }
 
 #brett_notater {
@@ -86,12 +106,6 @@ header h1 {
     height: 468px;
 }
 
-#highscore > h3 {
-  margin: 0;
-  font-family: 'Press Start 2P';
-  color: #00509e
-}
-
 #regler {
     box-sizing: border-box;
     padding: 5px;
@@ -100,6 +114,12 @@ header h1 {
     text-align: justify;
     margin-top: 10px;
     width: 468px;
+}
+
+h3 {
+  margin: 0;
+  font-family: 'Press Start 2P';
+  color: #00509e
 }
 
 #vanskelighetsgrad {
@@ -163,4 +183,10 @@ header h1 {
 .knapp:hover, .tall:hover {
     background-color: lightgray;
     cursor: pointer;
+}
+
+#informasjon {
+  background-color: rgb(245, 245, 245);
+  width: 800px;
+  padding: 20px;
 }

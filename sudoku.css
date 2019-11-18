@@ -1,15 +1,18 @@
 #brett {
+  position: relative;
+  z-index: 1;
   background-repeat: no-repeat;
   background-size: cover;
 }
 
 #notater {
   position: absolute;
-  z-index: -1;
+  z-index: 0;
+  top: 0;
 }
 
 table {
-    border-collapse: collapse;
+  border-collapse: collapse;
 }
 
 td {

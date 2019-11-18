@@ -1,91 +1,166 @@
-body {
-    margin-left: 50px;
+html, body {
+  margin: 0;
+  height: 100vh;
+  font-family: "Arial", sans-serif;
 }
 
-div {
-    font-family: "Arial", Gadget, sans-serif;
+header {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #00509e;;
+  height: 75px;
+}
+
+header > div {
+  width: 300px;
+}
+
+header img {
+  max-height: 50px;
+  margin: 10px;
+}
+
+header h1 {
+  font-family: 'Press Start 2P';
+  color: #00509e;
+  margin: 0;
+  font-size: 50px;
+}
+
+#om {
+  text-align: center;
+}
+
+#content {
+  display: flex;
+  justify-content: center;
+  height: calc(100% - 75px);
+}
+
+#brett_notater {
+  position: relative;
+}
+
+.midt, .side {
+  background-color: rgb(245, 245, 245);
+}
+
+.midt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 468px;
+  padding-top: 25px;
+}
+
+.side {
+  padding-top: 65px;
+  padding-left: 10px;
+  padding-right: 10px;
+  width: 300px;
+}
+
+#tellere {
+  font-family: 'Press Start 2P';
+  color: #00509e;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border: 3px solid #00509e;
+  border-radius: 5px;
+  padding: 5px;
+  height: 30px;
+  margin-bottom: 10px;
+  width: 468px;
+}
+
+#highscore {
+    box-sizing: border-box;
+    border: 3px solid #00509e;
+    border-radius: 5px;
+    line-height: 30px;
+    text-align: center;
+    height: 468px;
+}
+
+#highscore > h3 {
+  margin: 0;
+  font-family: 'Press Start 2P';
+  color: #00509e
 }
 
 #regler {
-    width: 452px;
+    box-sizing: border-box;
     padding: 5px;
     border: 3px solid #00509e;;
     border-radius: 10px;
     text-align: justify;
+    margin-top: 10px;
+    width: 468px;
 }
 
-#vanskelighetsvalg {
-    width: 452px;
-    display: flex;
-    justify-content: space-around;
+#vanskelighetsgrad {
+  width: 100%;
 }
 
-.vanskelighetsgrad {
-    width: 30%;
-    background-color: white;
-    color:black;
-    border: 2px solid #00509e;
-    border-radius: 5px;
+#vanskelighetsgrad span {
+  font-size: 10px;
+  font-family: 'Press Start 2P';
+  color: #00509e;
 }
 
-.vanskelighetsgrad:hover:enabled {
-    background-color: lightgray;
-    cursor: pointer;
+#vanskelighetsgrad select {
+  appearance: none;
+  font-size: 10px;
+  font-family: 'Press Start 2P';
+  float: right;
+
 }
 
-#tellere {
-    width: 60%;
-    background-color: white;
-    color:black;
-    border: 3px solid #00509e;
-    border-radius: 5px;
-    padding: 5px;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    height: 30px;
+#nyttspill {
+  width: 100%;
 }
 
-#poeng {
-    display: inline;
+#tastatur {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 96px 96px 96px;
+  grid-template-rows: 96px 96px 96px;
+  grid-gap: 3px;
+  background-color: #00509e;
+  border: 3px solid #00509e;
+  border-radius: 5px;
 }
 
-#tid {
-    display: inline;
-}
-
-#highscore {
-    margin-left: 20px;
-    background-color: white;
-    color:black;
-    border: 3px solid #00509e;
-    border-radius: 5px;
-    width: 210px;
-    line-height: 30px;
-    text-align: center;
-}
-
-#wrapper {
-    display: flex;
+.tall {
+  font-family: 'Press Start 2P';
+  background-color: rgb(245, 245, 245);
+  color: #00509e;
+  font-size: 25px;
+  border: none;
 }
 
 #ui {
-    width: 452px;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
 }
 
 .knapp {
-    width: 75px;
-    height: 46px;
-    background-color: white;
-    color:black;
+    font-family: 'Press Start 2P';
+    background-color: transparent;
+    color: #00509e;
     border: 3px solid #00509e;
     border-radius: 5px;
+    width: 48%;
+    height: 30px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
-.knapp:hover {
+.knapp:hover, .tall:hover {
     background-color: lightgray;
     cursor: pointer;
 }

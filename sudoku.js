@@ -112,8 +112,8 @@ $(document).ready(function(){
   });
 
   // Definerer antall hint på hver vanskelighetsgrad, og kjører funksjonen for å lage brettet
-  $(".vanskelighetsgrad").click(function() {
-    let tekst = $(this).text();
+  $("#nyttspill").click(function() {
+    let tekst = $("#vanskelighetsgrad select").val();
     let diff;
     if (tekst == "Lett") {
       diff = 38;
@@ -134,6 +134,16 @@ $(document).ready(function(){
     $(".notat").val("");
   });
 
+  // Tastatur
+  $(".tall").on("mousedown", function(event) {
+    event.preventDefault();
+    let tall = event.target.innerHTML;
+    if ($(":focus").prop("readonly") == false) {
+      $(":focus").val(tall);
+      $(":focus").trigger("input");
+    }
+  });
+
   $("#losbrett").click(function() {
     if (tabell.length > 0) {
       $(".celle").css("background-color", "");
@@ -143,18 +153,20 @@ $(document).ready(function(){
   });
 
   $("#noter").click(function() {
-    if ($("#notater").css("z-index") == -1) {
+    if ($("#notater").css("z-index") == 0) {
         $(this).css("background-color", "#00509e"); // Farge på knapp
+        $(this).css("color", "white"); // Farge på knapp
         $("td").css("background-color", ""); // Fjerner all bakgrunnsfarge på brettet
         $("#notater").removeClass("farge");
         $("#brett").addClass("farge");
         $("#notater").css("z-index", 1);
       } else {
         $(this).css("background-color", "");
+        $(this).css("color", "#00509e");
         $("td").css("background-color", "");
         $("#brett").removeClass("farge");
         $("#notater").addClass("farge");
-        $("#notater").css("z-index", -1);
+        $("#notater").css("z-index", 0);
     }
   })
 
@@ -172,7 +184,7 @@ $(document).ready(function(){
     let kolonne = $(this).closest("td").index();
     let tall = $("#brett tr:eq("+rad+") td:eq("+kolonne+") input").val();
 
-    $(".farge tr:eq("+rad+") td:eq("+kolonne+")").children().css("background-color", "#00509e");
+    $(".farge tr:eq("+rad+") td:eq("+kolonne+")").children().css("background-color", farge2);
 
     // Bakgrunnsfarge på tilhørende rad, kolonne og 3x3-boks
     for (let i = 0; i < 9; i++) {
@@ -188,7 +200,7 @@ $(document).ready(function(){
       for (let x = 0; x < 9; x++) {
         for (y = 0; y < 9; y++) {
           if ($("#brett tr:eq("+x+") td:eq("+y+") input").val() == tall) {
-            $(".farge tr:eq("+x+") td:eq("+y+")").css("background-color", farge);
+            $(".farge tr:eq("+x+") td:eq("+y+")").css("background-color", farge2);
           }
         }
       }

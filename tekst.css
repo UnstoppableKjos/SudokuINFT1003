@@ -31,7 +31,6 @@ header h1 {
 
 #om {
   text-align: right;
-  margin-right: 10px;
 }
 
 #om a:link, #om a:visited {
@@ -41,6 +40,7 @@ header h1 {
   text-align: center;
   text-decoration: none;
   display: inline-block;
+  margin-right: 10px;
 }
 
 #om a:hover, #om a:active {

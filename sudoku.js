@@ -116,7 +116,7 @@ $(document).ready(function(){
     let tekst = $("#vanskelighetsgrad select").val();
     let diff;
     if (tekst == "Lett") {
-      diff = 80;
+      diff = 38;
       vanskelighetsgrad = "Lett";
       diffMultiplier = 1;
     } else if (tekst == "Medium") {

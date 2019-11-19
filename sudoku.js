@@ -40,15 +40,20 @@ $(document).ready(function(){
     let input = $(this).val();
     $(this).val("");
     $(this).val(input);
-  });
-
-  // Validerer input til notater
-  $(".notat").on("input", function() {
     // Finner indeksen til notatfeltet
     let rad = $(this).closest("tr").index();
     let kolonne = $(this).closest("td").index();
 
-    $("#brett tr:eq("+rad+") td:eq("+kolonne+") input").val(""); // Fjerner tall fra brett
+    // Fjerner tall og eventuell markering av ugyldig tall fra brett
+    if (!$("#brett tr:eq("+rad+") td:eq("+kolonne+") input").attr("readonly")) {
+      $("#brett tr:eq("+rad+") td:eq("+kolonne+") input").val("")
+      .removeClass("ugyldig")
+      .css("background-color", "");
+    }
+  });
+
+  // Validerer input til notater
+  $(".notat").on("input", function() {
 
     let input = $(this).val(); // Alt som er notert
 
@@ -99,10 +104,10 @@ $(document).ready(function(){
       $("#notater tr:eq("+rad+") td:eq("+kolonne+") textarea").val(""); // Fjerner notater
 
       if ($(this).val() != losning1[rad][kolonne]) {
-        $(this).css("text-shadow", "0 0 red");
+        $(this).addClass("ugyldig");
         forsok[rad][kolonne]++;
       } else {
-        $(this).css("text-shadow", "0 0 black");
+        $(this).removeClass("ugyldig");
         $(this).prop("readonly", true);
         $("#notater tr:eq("+rad+") td:eq("+kolonne+") textarea").prop("readonly", true);
         updateScore(Math.floor(100 / forsok[rad][kolonne]));
@@ -139,8 +144,8 @@ $(document).ready(function(){
     event.preventDefault();
     let tall = event.target.innerHTML;
     if ($(":focus").prop("readonly") == false) {
-      $(":focus").val(tall);
-      $(":focus").trigger("input");
+      $(":focus").val(tall)
+      .trigger("input");
     }
   });
 
@@ -154,19 +159,19 @@ $(document).ready(function(){
 
   $("#noter").click(function() {
     if ($("#notater").css("z-index") == 0) {
-        $(this).css("background-color", "#00509e"); // Farge på knapp
-        $(this).css("color", "white"); // Farge på knapp
+        $(this).css("background-color", "#00509e") // Farge på knapp
+        .css("color", "white"); // Farge på knapp
         $("td").css("background-color", ""); // Fjerner all bakgrunnsfarge på brettet
-        $("#notater").removeClass("farge");
         $("#brett").addClass("farge");
-        $("#notater").css("z-index", 1);
+        $("#notater").removeClass("farge")
+        .css("z-index", 1);
       } else {
-        $(this).css("background-color", "");
-        $(this).css("color", "#00509e");
+        $(this).css("background-color", "")
+        .css("color", "#00509e");
         $("td").css("background-color", "");
         $("#brett").removeClass("farge");
-        $("#notater").addClass("farge");
-        $("#notater").css("z-index", 0);
+        $("#notater").addClass("farge")
+        .css("z-index", 0);
     }
   })
 
@@ -179,12 +184,13 @@ $(document).ready(function(){
 
     let farge1 = "LightGray";
     let farge2 = "#00509e";
+    let farge3 = "#99ccff";
 
     let rad = $(this).closest("tr").index();
     let kolonne = $(this).closest("td").index();
     let tall = $("#brett tr:eq("+rad+") td:eq("+kolonne+") input").val();
 
-    $(".farge tr:eq("+rad+") td:eq("+kolonne+")").children().css("background-color", farge2);
+    $(this).css("text-shadow", "0 0 0 white");
 
     // Bakgrunnsfarge på tilhørende rad, kolonne og 3x3-boks
     for (let i = 0; i < 9; i++) {
@@ -194,6 +200,8 @@ $(document).ready(function(){
       $(".farge tr:eq("+rad+") td:eq("+i+")").css("background-color", farge1);
       $(".farge tr:eq("+i+") td:eq("+kolonne+")").css("background-color", farge1);
     }
+
+    $(".farge tr:eq("+rad+") td:eq("+kolonne+")").css("background-color", farge2);
 
     // Bakgrunnsfarge på alle like tall
     if (tall != "") {
@@ -210,6 +218,18 @@ $(document).ready(function(){
   // Fjerner bakgrunnsfarge ved mistet fokus
   $(".celle, .notat").focusout(function() {
     $(".celle, .notat").css("background-color", "");
+    $(this).css("text-shadow", "")
+  });
+
+  //Bakgrunnsfarge ved hover
+  $(".celle, .notat").hover(function() {
+    let rad = $(this).closest("tr").index();
+    let kolonne = $(this).closest("td").index();
+    $(".farge tr:eq("+rad+") td:eq("+kolonne+")").children().css("background-color", "#00509e");
+  }, function(){
+    let rad = $(this).closest("tr").index();
+    let kolonne = $(this).closest("td").index();
+    $(".farge tr:eq("+rad+") td:eq("+kolonne+")").children().css("background-color", "");
   });
 
   // Navigering med piltaster
@@ -250,8 +270,8 @@ $(document).ready(function(){
 // Fjerner bakgrunnsfarge og bakgrunnsbilde
 function fjernFarge() {
   $("td").css("background-color", "");
-  $("#brett input").css("text-shadow", "0 0 black");
-  $("#brett").css("background-image", "");
+  $("#brett").css("background-image", "")
+  $(".celle").removeClass("ugyldig");
 }
 
 function lagSudoku(diff) {
@@ -468,14 +488,16 @@ function skrivUt() {
   for (let i = 0; i < 9; i++) {
     for (let j = 0; j < 9; j++) {
       if (tabell[i][j] > 0) {
-        $("#brett tr:eq("+i+") td:eq("+j+") input").val(tabell[i][j]);
-        $("#brett tr:eq("+i+") td:eq("+j+") input").prop("readonly", true);
-        $("#notater tr:eq("+i+") td:eq("+j+") textarea").prop("readonly", true);
+        $("#brett tr:eq("+i+") td:eq("+j+") input").val(tabell[i][j])
+        .prop("readonly", true);
+        $("#notater tr:eq("+i+") td:eq("+j+") textarea")
+        .prop("readonly", true);
       }
       else {
-        $("#brett tr:eq("+i+") td:eq("+j+") input").val("");
-        $("#brett tr:eq("+i+") td:eq("+j+") input").prop("readonly", false);
-        $("#notater tr:eq("+i+") td:eq("+j+") textarea").prop("readonly", false);
+        $("#brett tr:eq("+i+") td:eq("+j+") input").val("")
+        .prop("readonly", false);
+        $("#notater tr:eq("+i+") td:eq("+j+") textarea")
+        .prop("readonly", false);
       }
     }
   }

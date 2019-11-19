@@ -39,7 +39,7 @@ tr:nth-child(3n) td {
 .celle, .notat {
   display: block;
   color: transparent; /* Gjør at musepekeren ikke vises i valgt celle */
-  text-shadow: 0 0 black;
+  text-shadow: 0 0 0 black;
   text-align: center;
   background-color: transparent;
 	border: 0;
@@ -47,14 +47,17 @@ tr:nth-child(3n) td {
   padding: 0;
 }
 
+.ugyldig {
+  background-color: red;
+  /*text-shadow: 0 0 0 red;*/
+}
+
 .celle:focus, .notat:focus {
   outline: none;
-  text-shadow: 0 0 white;
 }
 
 .celle:hover, .notat:hover {
   cursor: pointer;
-  background-color: #00509e;
 }
 
 .celle {

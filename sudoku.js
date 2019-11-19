@@ -250,7 +250,7 @@ $(document).ready(function(){
                 .find(mulig);
             break;
         case 39: // Høyre
-            neste = aktiv.closest('td').next().find(mulig);
+            neste = aktiv.closest("td").next().find(mulig);
             break;
         case 40: // Ned
             neste = aktiv

@@ -18,8 +18,8 @@ $(document).ready(function(){
     brett += "<tr>";
     notater += "<tr>";
     for (let j = 0; j < 9; j++) {
-      brett += "<td><input class='celle' type='text' readonly></td>";
-      notater += "<td><textarea class='notat' readonly></textarea></td>";
+      brett += "<td><input class='celle' type='text' tabindex='-1' readonly></td>";
+      notater += "<td><textarea class='notat' tabindex='-1' readonly></textarea></td>";
     }
     brett += "</tr>";
     notater += "</tr>";
@@ -28,6 +28,8 @@ $(document).ready(function(){
   notater += "</table>";
   $("#brett").html(brett);
   $("#notater").html(notater);
+
+  $(".celle").first().attr("tabindex", 0);
 
   // Flytter musepeker før tallet når man klikker på en celle, eller skriver inn et tall
   // Gjør at tallet kan endres uten å klikke på cellen på nytt

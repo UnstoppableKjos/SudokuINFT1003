@@ -57,16 +57,16 @@
 
         <div class="side">
           <div id="vanskelighetsgrad">
-            <span>Vanskelighetsgrad:</span>
-            <select>
+            <label for="velg_diff">Vanskelighetsgrad:</label>
+            <select id="velg_diff">
               <option value="Lett">Lett</option>
               <option value="Medium">Medium</option>
               <option value="Vanskelig">Vanskelig</option>
             </select>
           </div>
-          <button class="knapp" id="nyttspill">Nytt spill</button>
+          <button aria-label="Nytt spill" class="knapp" id="nyttspill">Nytt spill</button>
 
-          <div id="tastatur">
+          <div aria-label="Tallknapper" id="tastatur">
             <button class="tall" value="1">1</button>
             <button class="tall" value="2">2</button>
             <button class="tall" value="3">3</button>
@@ -79,8 +79,8 @@
           </div>
 
           <div id="ui">
-            <button class="knapp" id="noter">Notater</button>
-            <button class="knapp" id="losbrett">Løs brett</button>
+            <button aria-label="Notater" class="knapp" id="noter">Notater</button>
+            <button aria-label="Løs brett" class="knapp" id="losbrett">Løs brett</button>
           </div>
 
       </div>

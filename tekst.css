@@ -43,9 +43,9 @@ header h1 {
   margin-right: 10px;
 }
 
-#om a:hover, #om a:active {
+#om a:hover, #om a:focus {
   background-color: lightgray;
-  color: white;
+  color: #00509e;
 }
 
 #overskrift a {
@@ -204,6 +204,10 @@ h3, h4 {
 .knapp:hover, .tall:hover {
     background-color: lightgray;
     cursor: pointer;
+}
+
+.knapp:focus, .tall:focus {
+  background-color: lightgray;
 }
 
 #informasjon {

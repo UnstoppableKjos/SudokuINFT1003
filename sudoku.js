@@ -153,6 +153,7 @@ $(document).ready(function(){
 
   $("#losbrett").click(function() {
     if (tabell.length > 0) {
+      $(".notat").val("");
       fjernFarge();
       losSudoku();
       skrivUt();

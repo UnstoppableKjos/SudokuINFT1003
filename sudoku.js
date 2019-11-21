@@ -151,9 +151,11 @@ $(document).ready(function(){
     }
   });
 
+    // Fyller inn alle tallene som gjenstår på brettet
   $("#losbrett").click(function() {
     if (tabell.length > 0) {
       $(".notat").val("");
+      doTimer = false;
       fjernFarge();
       losSudoku();
       skrivUt();
@@ -273,7 +275,7 @@ $(document).ready(function(){
 // Fjerner bakgrunnsfarge og bakgrunnsbilde
 function fjernFarge() {
   $("td").css("background-color", "");
-  $("#brett").css("background-image", "")
+  $("#brett").css("background-image", "");
   $(".celle").removeClass("ugyldig");
 }
 
@@ -284,7 +286,7 @@ function lagSudoku(diff) {
   lagSpill(diff); // Fjerner tall for å gjøre brettet spillbart
   skrivUt(); // Skriver ut brettet
   let t1 = performance.now();
-  console.log("Brett laget på " + (t1 - t0) + " ms.");
+  console.log("Brett laget på " + (t1 - t0).toFixed(2) + " ms.");
   // Starter ny timer og stopper etter behov
   resetCounter();
   if (doTimer) {clearInterval(timer);}

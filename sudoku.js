@@ -146,14 +146,14 @@ $(document).ready(function(){
     event.preventDefault();
     let tall = event.target.innerHTML;
     if ($(":focus").prop("readonly") == false) {
-      $(":focus").val(tall)
+      $(":focus").val($(":focus").val() + tall)
       .trigger("input");
     }
   });
 
   $("#losbrett").click(function() {
     if (tabell.length > 0) {
-      $(".celle").css("background-color", "");
+      fjernFarge();
       losSudoku();
       skrivUt();
     }
